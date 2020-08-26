@@ -34,9 +34,9 @@ export const Basic = () => {
 			createColumn={createColumn}
 			createCard={createCard}
 		>
-			{item => (
+			{card => (
 				<Typography variant="body1" component="div">
-					{item.id}
+					{card.id}
 				</Typography>
 			)}
 		</Board>
