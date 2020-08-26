@@ -11,6 +11,8 @@ dist
 storybook-static
 .rpt2_cache
 
+.vscode/
+
 # misc
 .DS_Store
 .env

@@ -27,10 +27,7 @@
     "react": "^16.0.0"
   },
   "devDependencies": {
-    "@storybook/addon-actions": "^6.0.12",
-    "@storybook/addon-controls": "^6.0.12",
     "@storybook/addon-docs": "^6.0.12",
-    "@storybook/addon-knobs": "^6.0.12",
     "@storybook/addon-links": "^6.0.12",
     "@storybook/addons": "^6.0.12",
     "@storybook/preset-create-react-app": "^3.1.4",
@@ -73,6 +70,7 @@
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
-    "@material-ui/lab": "^4.0.0-alpha.56"
+    "@types/react-beautiful-dnd": "^13.0.0",
+    "react-beautiful-dnd": "^13.0.0"
   }
 }
