@@ -210,10 +210,11 @@ export function Board({
 			console.error(`Cannot find column ${columnId}`);
 			return;
 		}
+		newColumns.splice(index, 0, column);
 
 		setColumns(newColumns);
 		if (onColumnMoved) {
-			onColumnMoved(column, index);
+			onColumnMoved(column, newColumns.indexOf(column));
 		}
 	}
 
