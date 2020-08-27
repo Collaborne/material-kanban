@@ -20,7 +20,7 @@ function useColumns(initialColumns: Column[]): [Column[], React.Dispatch<React.S
 
 	async function createColumn() {
 		const index = columns.length + 1;
-		return { id: `column${index}`, name: `Column ${index}`, cards: [] };
+		return { id: `column${index}`, cards: [] };
 	}
 
 	async function createCard(column: Column) {

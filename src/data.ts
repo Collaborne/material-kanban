@@ -13,5 +13,5 @@ export interface Column {
 	 *
 	 * This can be modified, and typically would have a getter/setter to handle changes.
 	 */
-	name: string;
+	name?: string;
 }
