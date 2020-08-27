@@ -26,6 +26,7 @@
     "react": "^16.0.0"
   },
   "devDependencies": {
+    "@storybook/addon-backgrounds": "^6.0.19",
     "@storybook/addon-docs": "^6.0.12",
     "@storybook/addon-links": "^6.0.12",
     "@storybook/addons": "^6.0.12",
