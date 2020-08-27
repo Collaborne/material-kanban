@@ -11,7 +11,7 @@ export default {
 };
 
 const COLUMNS: Column[] = [
-	{ id: 'column1', name: 'Column 1', cards: [] },
+	{ id: 'column1', name: 'Column 1', cards: [ { id: 'card_1_1' } ] },
 	{ id: 'column2', name: 'Column 2', cards: [] },
 ];
 
