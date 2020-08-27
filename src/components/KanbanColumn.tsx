@@ -123,7 +123,7 @@ export function KanbanColumn({
 							{children}
 						</InnerObjectsList>
 						{provided.placeholder}
-						<AddCardButton onClick={handleAddCard} />
+						{handleAddCard && <AddCardButton onClick={handleAddCard} />}
 					</List>
 				</Paper>
 			)}

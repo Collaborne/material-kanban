@@ -49,6 +49,23 @@ export const Basic = () => {
 	);
 }
 
+export const ReadOnly = () => {
+	const [columns, setColumns] = useColumns(COLUMNS);
+
+	return (
+		<Board
+			columns={columns}
+			onChange={setColumns}
+		>
+			{card => (
+				<Typography variant="body1" component="div">
+					{card.id}
+				</Typography>
+			)}
+		</Board>
+	);
+}
+
 export const I18n = () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
