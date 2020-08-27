@@ -59,27 +59,30 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const InnerObjectsList = React.memo(
-	({ cards, onClick: handleClick, children }: InnerObjectsListProps) => {
-		const classes = useStyles();
+// FIXME: Bring back React.memo()
+function InnerObjectsList({
+	cards,
+	onClick: handleClick,
+	children,
+}: InnerObjectsListProps) {
+	const classes = useStyles();
 
-		return (
-			<>
-				{cards.map((card, index) => (
-					<KanbanCard
-						key={card.id}
-						card={card}
-						index={index}
-						className={classes.object}
-						onClick={handleClick ? () => handleClick(card) : undefined}
-					>
-						{children}
-					</KanbanCard>
-				))}
-			</>
-		);
-	},
-);
+	return (
+		<>
+			{cards.map((card, index) => (
+				<KanbanCard
+					key={card.id}
+					card={card}
+					index={index}
+					className={classes.object}
+					onClick={handleClick ? () => handleClick(card) : undefined}
+				>
+					{children}
+				</KanbanCard>
+			))}
+		</>
+	);
+}
 
 export function KanbanColumn({
 	column,
