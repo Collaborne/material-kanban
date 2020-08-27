@@ -30,6 +30,14 @@ function useColumns(initialColumns: Column[]): [Column[], React.Dispatch<React.S
 	return [columns, setColumns, createColumn, createCard];
 }
 
+function SimpleCard<TCard extends Card = Card>({ card, children }: { card: TCard, children?: (card: TCard) => string }) {
+	return (
+		<Typography variant="body1" component="div">
+			{children ? children(card) : card.id}
+		</Typography>
+	);
+}
+
 export const Basic = () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
@@ -40,11 +48,7 @@ export const Basic = () => {
 			createColumn={createColumn}
 			createCard={createCard}
 		>
-			{card => (
-				<Typography variant="body1" component="div">
-					{card.id}
-				</Typography>
-			)}
+			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
 };
@@ -66,11 +70,7 @@ export const Empty = () => {
 			createColumn={createColumn}
 			createCard={createCard}
 		>
-			{card => (
-				<Typography variant="body1" component="div">
-					{card.id}
-				</Typography>
-			)}
+			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
 };
@@ -90,11 +90,7 @@ export const ReadOnly = () => {
 			columns={columns}
 			onChange={setColumns}
 		>
-			{card => (
-				<Typography variant="body1" component="div">
-					{card.id}
-				</Typography>
-			)}
+			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
 };
@@ -122,11 +118,7 @@ export const I18n = () => {
 			createCard={createCard}
 			intl={intl}
 		>
-			{card => (
-				<Typography variant="body1" component="div">
-					{card.id}
-				</Typography>
-			)}
+			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
 }
@@ -176,11 +168,7 @@ export const GenericData = () => {
 			createColumn={createMyColumn}
 			createCard={createMyCard}
 		>
-			{(card: MyCard) => (
-				<Typography variant="body1" component="div">
-					{card.id}: {card.index}
-				</Typography>
-			)}
+			{card => <SimpleCard card={card}>{card => `${card.id}: ${card.index}`}</SimpleCard>}
 		</Board>
 	)
 
