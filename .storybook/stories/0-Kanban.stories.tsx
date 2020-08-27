@@ -56,6 +56,32 @@ Basic.parameters = {
 	},
 };
 
+export const Empty = () => {
+	const [columns, setColumns, createColumn, createCard] = useColumns([] as Column[]);
+
+	return (
+		<Board
+			columns={columns}
+			onChange={setColumns}
+			createColumn={createColumn}
+			createCard={createCard}
+		>
+			{card => (
+				<Typography variant="body1" component="div">
+					{card.id}
+				</Typography>
+			)}
+		</Board>
+	);
+};
+Empty.parameters = {
+	docs: {
+		description: {
+			story: 'A board can be empty initially',
+		},
+	},
+};
+
 export const ReadOnly = () => {
 	const [columns, setColumns] = useColumns(COLUMNS);
 
