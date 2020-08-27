@@ -47,7 +47,14 @@ export const Basic = () => {
 			)}
 		</Board>
 	);
-}
+};
+Basic.parameters = {
+	docs: {
+		description: {
+			story: 'The Kanban board provides columns and cards that can be dragged around',
+		},
+	},
+};
 
 export const ReadOnly = () => {
 	const [columns, setColumns] = useColumns(COLUMNS);
@@ -64,7 +71,14 @@ export const ReadOnly = () => {
 			)}
 		</Board>
 	);
-}
+};
+ReadOnly.parameters = {
+	docs: {
+		description: {
+			story: 'By not providing the `createColumn` and/or `createCard` parameters the board no longer allows creating columns and cards, respectively.',
+		},
+	},
+};
 
 export const I18n = () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
@@ -90,4 +104,11 @@ export const I18n = () => {
 		</Board>
 	);
 }
+I18n.parameters = {
+	docs: {
+		description: {
+			story: 'The `intl` parameter can be used to configure the texts in the board controls',
+		},
+	},
+};
 I18n.storyName = 'I18n';
