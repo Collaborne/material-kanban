@@ -24,7 +24,7 @@ export const Basic = () => {
 	}
 
 	async function createCard(column: Column) {
-		return { id: `item_${column.id}_${column.cards.length + 1}`};
+		return { id: `card_${column.id}_${column.cards.length + 1}`};
 	}
 
 	return (
