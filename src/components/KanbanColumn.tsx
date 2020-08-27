@@ -11,17 +11,20 @@ import { AddCardButton } from './AddCardButton';
 import { ColumnHeader } from './ColumnHeader';
 import { KanbanCard } from './KanbanCard';
 
-interface Props {
-	column: Data.Column;
+interface Props<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card
+> {
+	column: TColumn;
 	isDragging: boolean;
 	index: number;
 
 	onNameChanged?: (name: string) => void;
 
 	onAddCard?: () => void;
-	onOpenCard?: (card: Data.Card) => void;
+	onOpenCard?: (card: TCard) => void;
 
-	children: (card: Data.Card) => React.ReactNode;
+	children: (card: TCard) => React.ReactNode;
 
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
@@ -29,12 +32,12 @@ interface Props {
 	renderActions?: () => React.ReactNode;
 }
 
-interface InnerObjectsListProps {
-	cards: Data.Card[];
+interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
+	cards: TCard[];
 
-	onClick?: (card: Data.Card) => void;
+	onClick?: (card: TCard) => void;
 
-	children: (card: Data.Card) => React.ReactNode;
+	children: (card: TCard) => React.ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -60,11 +63,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // FIXME: Bring back React.memo()
-function InnerObjectsList({
+function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 	cards,
 	onClick: handleClick,
 	children,
-}: InnerObjectsListProps) {
+}: InnerObjectsListProps<TCard>) {
 	const classes = useStyles();
 
 	return (
@@ -84,7 +87,10 @@ function InnerObjectsList({
 	);
 }
 
-export function KanbanColumn({
+export function KanbanColumn<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card
+>({
 	column,
 	onAddCard: handleAddCard,
 	onOpenCard: handleClick,
@@ -93,7 +99,7 @@ export function KanbanColumn({
 
 	renderActions,
 	children,
-}: Props) {
+}: Props<TColumn, TCard>) {
 	const classes = useStyles();
 
 	function handleNameChange(newName: string) {

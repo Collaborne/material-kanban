@@ -18,14 +18,17 @@ import { KanbanColumn } from './components/KanbanColumn';
 import { AddColumnButton } from './components/AddColumnButton';
 import { Intl, IntlContext, DEFAULT_INTL } from './components/IntlContext';
 
-interface InnerColumnListProps {
-	columns: Data.Column[];
+interface InnerColumnListProps<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card
+> {
+	columns: TColumn[];
 
-	onChangeColumnName?: (column: Data.Column, name: string) => void;
+	onChangeColumnName?: (column: TColumn, name: string) => void;
 
-	onAddCard?: (column: Data.Column) => void;
+	onAddCard?: (column: TColumn) => void;
 
-	children: (card: Data.Card) => React.ReactNode;
+	children: (card: TCard) => React.ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -57,12 +60,15 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-function InnerColumnList({
+function InnerColumnList<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card
+>({
 	columns,
 	onAddCard: handleAddCard,
 	onChangeColumnName: handleChangeColumnName,
 	children,
-}: InnerColumnListProps) {
+}: InnerColumnListProps<TColumn, TCard>) {
 	const classes = useStyles();
 	return (
 		<>
@@ -99,34 +105,36 @@ function InnerColumnList({
 	);
 }
 
-interface Props {
-	columns: Data.Column[];
-	onChange?: (newColumns: Data.Column[]) => void;
+interface Props<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card
+> {
+	columns: TColumn[];
+	onChange?: (newColumns: TColumn[]) => void;
 
 	intl?: Intl;
 
 	// Factory methods for data items
-	createColumn?: () => Promise<Data.Column>;
-	createCard?: (column: Data.Column) => Promise<Data.Card>;
+	createColumn?: () => Promise<TColumn>;
+	createCard?: (column: TColumn) => Promise<TCard>;
 
 	// Callbacks
 	// TODO: Review these, in particular the parameters (ids vs the things) and the return values (who modifies the arrays?)
 
-	onColumnAdded?: (column: Data.Column, index: number) => void;
-	onColumnMoved?: (column: Data.Column, newIndex: number) => void;
-	onColumnNameChanged?: (column: Data.Column, name: string) => Promise<void>;
+	onColumnAdded?: (column: TColumn, index: number) => void;
+	onColumnMoved?: (column: TColumn, newIndex: number) => void;
+	onColumnNameChanged?: (column: TColumn, name: string) => Promise<void>;
 
-	onCardAdded?: (card: Data.Card, column: Data.Column, index: number) => void;
-	onCardMoved?: (
-		card: Data.Card,
-		newColumn: Data.Column,
-		newIndex: number,
-	) => void;
+	onCardAdded?: (card: TCard, column: TColumn, index: number) => void;
+	onCardMoved?: (card: TCard, newColumn: TColumn, newIndex: number) => void;
 
-	children: (card: Data.Card) => React.ReactNode;
+	children: (card: TCard) => React.ReactNode;
 }
 
-export function Board({
+export function Board<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card
+>({
 	columns: initialColumns,
 	onChange,
 
@@ -140,7 +148,7 @@ export function Board({
 	onCardMoved,
 	children,
 	intl,
-}: Props) {
+}: Props<TColumn, TCard>) {
 	const [columns, setColumns] = useState(initialColumns);
 	const classes = useStyles();
 
@@ -162,7 +170,7 @@ export function Board({
 		}
 
 		// Now that we have the card: update all columns.
-		let newColumn: Data.Column | undefined;
+		let newColumn: TColumn | undefined;
 		const newColumns = columns.map(column => {
 			const newCards = column.cards.filter(card => card.id !== cardId);
 			if (column.id === columnId) {
@@ -201,8 +209,8 @@ export function Board({
 				}
 			},
 			{
-				newColumns: [] as Data.Column[],
-				column: undefined as Data.Column | undefined,
+				newColumns: [] as TColumn[],
+				column: undefined as TColumn | undefined,
 			},
 		);
 		if (!column) {
@@ -237,7 +245,7 @@ export function Board({
 		}
 	}
 
-	async function handleAddCard(column: Data.Column) {
+	async function handleAddCard(column: TColumn) {
 		if (!createCard) {
 			// Caller shouldn't have called this in the first place!
 			return;

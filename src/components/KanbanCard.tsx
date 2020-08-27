@@ -9,13 +9,13 @@ import { Draggable } from 'react-beautiful-dnd';
 
 import * as Data from '../data';
 
-interface Props {
-	card: Data.Card;
+interface Props<TCard extends Data.Card = Data.Card> {
+	card: TCard;
 	index: number;
 	className?: string;
 	onClick?: () => void;
 
-	children: (item: Data.Card) => React.ReactNode;
+	children: (item: TCard) => React.ReactNode;
 }
 
 const useStyles = makeStyles(() => ({
@@ -25,13 +25,13 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-export function KanbanCard({
+export function KanbanCard<TCard extends Data.Card = Data.Card>({
 	card,
 	index,
 	className,
 	onClick,
 	children,
-}: Props) {
+}: Props<TCard>) {
 	const classes = useStyles();
 
 	return (
