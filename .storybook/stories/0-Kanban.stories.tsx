@@ -150,7 +150,7 @@ export const GenericData = () => {
 			createColumn={createMyColumn}
 			createCard={createMyCard}
 		>
-			{card => (
+			{(card: MyCard) => (
 				<Typography variant="body1" component="div">
 					{card.id}: {card.index}
 				</Typography>
