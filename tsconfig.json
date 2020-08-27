@@ -30,7 +30,7 @@
     "noEmit": true
   },
   "include": [
-    "src", ".storybook/stories"
+    "src"
   ],
   "exclude": [
     "node_modules",
