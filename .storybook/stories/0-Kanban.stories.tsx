@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
 import { Board, Card, Column, Intl } from '../../src';
@@ -177,6 +178,41 @@ GenericData.parameters = {
 	docs: {
 		description: {
 			story: 'The board handles generic data types and provides the correctly typed "card" in the render prop',
+		},
+	},
+};
+
+export const ExternalChange = () => {
+	const [columns, setColumns] = useColumns(COLUMNS);
+	const [lastChange, setLastChange] = useState(Date.now())
+
+	function addColumn() {
+		setColumns([
+			...columns,
+			{ id: `column${columns.length + 1}`, cards: [] },
+		]);
+		setLastChange(Date.now());
+	}
+
+	return (
+		<>
+			<Board
+				key={lastChange}
+				columns={columns}
+				onChange={setColumns}
+			>
+				{card => <SimpleCard card={card}/>}
+			</Board>
+
+			<Button onClick={addColumn}>Add column (external)</Button>
+		</>
+	);
+
+};
+ExternalChange.parameters = {
+	docs: {
+		description: {
+			story: 'Changing the data from the outside requires re-creating the component',
 		},
 	},
 };
