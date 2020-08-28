@@ -147,7 +147,8 @@ export function Board<
 	onCardAdded,
 	onCardMoved,
 	children,
-	intl,
+
+	intl = DEFAULT_INTL,
 }: Props<TColumn, TCard>) {
 	const [columns, setColumns] = useState(initialColumns);
 	const classes = useStyles();
@@ -309,7 +310,7 @@ export function Board<
 
 	return (
 		<div className={classes.content}>
-			<IntlContext.Provider value={intl ?? DEFAULT_INTL}>
+			<IntlContext.Provider value={intl}>
 				<DragDropContext onDragEnd={handleDragEnd}>
 					<Droppable
 						droppableId="container"
