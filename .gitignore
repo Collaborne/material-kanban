@@ -2,16 +2,23 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
-node_modules
+node_modules/
 package-lock.json
 
 # builds
-build
-dist
-storybook-static
-.rpt2_cache
+build/
+dist/
+storybook-static/
+.rpt2_cache/
 
 .vscode/
+
+# development workflows
+.node_modules/
+
+*.orig
+*.rej
+*.porig
 
 # misc
 .DS_Store
