@@ -115,8 +115,8 @@ interface Props<
 	intl?: Intl;
 
 	// Factory methods for data items
-	createColumn?: () => Promise<TColumn>;
-	createCard?: (column: TColumn) => Promise<TCard>;
+	createColumn?: () => Promise<TColumn | undefined>;
+	createCard?: (column: TColumn) => Promise<TCard | undefined>;
 
 	// Callbacks
 	// TODO: Review these, in particular the parameters (ids vs the things) and the return values (who modifies the arrays?)
