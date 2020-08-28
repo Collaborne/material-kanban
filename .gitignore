@@ -15,6 +15,7 @@ storybook-static/
 
 # development workflows
 .node_modules/
+exposed/
 
 *.orig
 *.rej
