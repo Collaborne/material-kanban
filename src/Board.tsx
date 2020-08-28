@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-
+import { makeStyles, Theme, WithStyles } from '@material-ui/core/styles';
+import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
 
@@ -18,10 +18,46 @@ import { KanbanColumn } from './components/KanbanColumn';
 import { AddColumnButton } from './components/AddColumnButton';
 import { Intl, IntlContext, DEFAULT_INTL } from './components/IntlContext';
 
+/** Styles that can be modified by a caller */
+export type BoardClassKey = never;
+
+function styles(theme: Theme) {
+	// Explicitly type out each of the entries so that we get type checking for the CSS parts, and at the same
+	// time retain the knowledge of the keys. Using a Record<string, CSSPRoperties> result would produce a
+	// 'classes' value below that could refer to undefined classes.
+	return {
+		content: {
+			display: 'flex',
+			flexDirection: 'row',
+			flexGrow: 1,
+			overflowX: 'auto',
+			overflowY: 'hidden',
+			padding: theme.spacing(0, 3, 1, 3),
+		} as CSSProperties,
+		deleteButton: {
+			marginRight: theme.spacing(1),
+		} as CSSProperties,
+		list: {
+			display: 'flex',
+			flexDirection: 'row',
+		} as CSSProperties,
+		columnContainer: {
+			marginRight: theme.spacing(2),
+			padding: 0,
+		} as CSSProperties,
+		addColumnButton: {
+			// Keep space for scrolling
+			paddingRight: theme.spacing(3),
+		} as CSSProperties,
+	};
+}
+
+const useStyles = makeStyles(styles);
+
 interface InnerColumnListProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
-> {
+> extends Partial<WithStyles<BoardClassKey>> {
 	columns: TColumn[];
 
 	onChangeColumnName?: (column: TColumn, name: string) => void;
@@ -33,35 +69,6 @@ interface InnerColumnListProps<
 	children: (card: TCard) => React.ReactNode;
 }
 
-const useStyles = makeStyles(theme => ({
-	content: {
-		display: 'flex',
-		flexDirection: 'row',
-		flexGrow: 1,
-		overflowX: 'auto',
-		overflowY: 'hidden',
-		padding: theme.spacing(0, 3, 1, 3),
-	},
-	deleteButton: {
-		marginRight: theme.spacing(1),
-	},
-	tabs: {
-		flexGrow: 1,
-	},
-	list: {
-		display: 'flex',
-		flexDirection: 'row',
-	},
-	columnContainer: {
-		marginRight: theme.spacing(2),
-		padding: 0,
-	},
-	addColumnButton: {
-		// Keep space for scrolling
-		paddingRight: theme.spacing(3),
-	},
-}));
-
 function InnerColumnList<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
@@ -70,6 +77,7 @@ function InnerColumnList<
 	onAddCard: handleAddCard,
 	onCardClicked: handleCardClicked,
 	onChangeColumnName: handleChangeColumnName,
+
 	children,
 }: InnerColumnListProps<TColumn, TCard>) {
 	const classes = useStyles();
@@ -116,7 +124,7 @@ function InnerColumnList<
 interface Props<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
-> {
+> extends Partial<WithStyles<BoardClassKey>> {
 	columns: TColumn[];
 	onChange?: (newColumns: TColumn[]) => void;
 
@@ -160,8 +168,8 @@ export function Board<
 
 	intl = DEFAULT_INTL,
 }: Props<TColumn, TCard>) {
-	const [columns, setColumns] = useState(initialColumns);
 	const classes = useStyles();
+	const [columns, setColumns] = useState(initialColumns);
 
 	// XXX: If there are no callbacks provided, how would we handle this?
 	// - Should we require them?

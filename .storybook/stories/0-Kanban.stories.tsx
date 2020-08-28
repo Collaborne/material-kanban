@@ -247,3 +247,14 @@ CardInteraction.parameters = {
 		},
 	},
 };
+
+export const Styling = () => {
+	return <div>TODO: Implement an example for providing style overrides through 'classes'</div>
+}
+Styling.parameters = {
+	docs: {
+		description: {
+			story: 'The board components can be styled',
+		},
+	},
+};
