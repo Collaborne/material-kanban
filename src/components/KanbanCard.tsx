@@ -29,7 +29,7 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 	card,
 	index,
 	className,
-	onClick,
+	onClick: handleClick,
 	children,
 }: Props<TCard>) {
 	const classes = useStyles();
@@ -43,7 +43,7 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 					innerRef={provided.innerRef}
 					className={clsx(classes.card, className)}
 					variant="outlined"
-					onClick={onClick}
+					onClick={handleClick}
 				>
 					<CardContent>{children(card)}</CardContent>
 				</Card>

@@ -28,6 +28,8 @@ interface InnerColumnListProps<
 
 	onAddCard?: (column: TColumn) => void;
 
+	onCardClicked?: (card: TCard, column: TColumn) => void;
+
 	children: (card: TCard) => React.ReactNode;
 }
 
@@ -66,6 +68,7 @@ function InnerColumnList<
 >({
 	columns,
 	onAddCard: handleAddCard,
+	onCardClicked: handleCardClicked,
 	onChangeColumnName: handleChangeColumnName,
 	children,
 }: InnerColumnListProps<TColumn, TCard>) {
@@ -93,6 +96,11 @@ function InnerColumnList<
 								}
 								onAddCard={
 									handleAddCard ? () => handleAddCard(column) : undefined
+								}
+								onOpenCard={
+									handleCardClicked
+										? card => handleCardClicked(card, column)
+										: undefined
 								}
 							>
 								{children}
@@ -127,6 +135,7 @@ interface Props<
 
 	onCardAdded?: (card: TCard, column: TColumn, index: number) => void;
 	onCardMoved?: (card: TCard, newColumn: TColumn, newIndex: number) => void;
+	onCardClicked?: (card: TCard, column: TColumn) => void;
 
 	children: (card: TCard) => React.ReactNode;
 }
@@ -146,6 +155,7 @@ export function Board<
 	onColumnNameChanged: handleChangeColumnName,
 	onCardAdded,
 	onCardMoved,
+	onCardClicked: handleCardClicked,
 	children,
 
 	intl = DEFAULT_INTL,
@@ -329,6 +339,7 @@ export function Board<
 										columns={columns}
 										onChangeColumnName={handleChangeColumnName}
 										onAddCard={createCard && handleAddCard}
+										onCardClicked={handleCardClicked}
 									>
 										{children}
 									</InnerColumnList>

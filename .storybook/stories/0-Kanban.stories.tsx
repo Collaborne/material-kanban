@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { action } from '@storybook/addon-actions';
+
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
@@ -213,6 +215,35 @@ ExternalChange.parameters = {
 	docs: {
 		description: {
 			story: 'Changing the data from the outside requires re-creating the component',
+		},
+	},
+};
+
+export const CardInteraction = () => {
+	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
+
+	const clickAction = action('card clicked');
+
+	function handleClick(card: Card, column: Column) {
+		clickAction({card, column});
+	}
+
+	return (
+		<Board
+			columns={columns}
+			onChange={setColumns}
+			createColumn={createColumn}
+			createCard={createCard}
+			onCardClicked={handleClick}
+		>
+			{card => <SimpleCard card={card}/>}
+		</Board>
+	);
+};
+CardInteraction.parameters = {
+	docs: {
+		description: {
+			story: 'Provide a handler for reacting on card clicks',
 		},
 	},
 };
