@@ -88,7 +88,7 @@ function InnerColumnList<
 								column={column}
 								onNameChanged={
 									handleChangeColumnName
-										? (name: string) => handleChangeColumnName(column, name)
+										? name => handleChangeColumnName(column, name)
 										: undefined
 								}
 								onAddCard={
