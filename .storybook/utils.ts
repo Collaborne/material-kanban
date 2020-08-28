@@ -1,4 +1,4 @@
-import { StoryFn, Parameters, Annotations, Args } from '@storybook/addons';
+import { StoryFn, Annotations, Args } from '@storybook/addons';
 
 type OptionalStoryInterface<Args, ReturnType> = Annotations<Args, ReturnType> & { storyName?: string };
 

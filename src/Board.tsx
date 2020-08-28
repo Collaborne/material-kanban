@@ -393,7 +393,6 @@ export function Board<
 										onChangeColumnName={handleChangeColumnName}
 										onAddCard={createCard && handleAddCard}
 										onCardClicked={handleCardClicked}
-
 										columnActions={renderColumnActions}
 									>
 										{children}
