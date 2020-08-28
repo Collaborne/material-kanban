@@ -138,11 +138,17 @@ interface Props<
 	// TODO: Review these, in particular the parameters (ids vs the things) and the return values (who modifies the arrays?)
 
 	onColumnAdded?: (column: TColumn, index: number) => void;
-	onColumnMoved?: (column: TColumn, newIndex: number) => void;
+	onColumnMoved?: (column: TColumn, newIndex: number, oldIndex: number) => void;
 	onColumnNameChanged?: (column: TColumn, name: string) => Promise<void>;
 
 	onCardAdded?: (card: TCard, column: TColumn, index: number) => void;
-	onCardMoved?: (card: TCard, newColumn: TColumn, newIndex: number) => void;
+	onCardMoved?: (
+		card: TCard,
+		newColumn: TColumn,
+		newIndex: number,
+		oldColumn: TColumn,
+		oldIndex: number,
+	) => void;
 	onCardClicked?: (card: TCard, column: TColumn) => void;
 
 	children: (card: TCard) => React.ReactNode;
@@ -178,28 +184,45 @@ export function Board<
 	// This also relates to how react would now trigger re-rendering, as the content changes.
 	function moveCard(cardId: string, columnId: string, index: number) {
 		// Move it in the provided data and then invoke the callback.
-		const card = columns
-			.map(column => column.cards.find(card => card.id === cardId))
-			.reduce((result, card) => result ?? card, undefined);
+		const found = columns
+			.map(column => {
+				const index = column.cards.findIndex(card => card.id === cardId);
+				if (index === -1) {
+					return undefined;
+				}
+				return {
+					column,
+					index,
+				};
+			})
+			.reduce((result, entry) => result ?? entry, undefined);
 
-		if (!card) {
+		if (!found) {
 			// Huuuuh? What did the user move then?
 			console.error(`Cannot find card ${cardId}`);
 			return;
 		}
 
+		const { column: oldColumn, index: oldIndex } = found;
+		const card = oldColumn.cards[oldIndex];
+
 		// Now that we have the card: update all columns.
 		let newColumn: TColumn | undefined;
 		const newColumns = columns.map(column => {
 			const newCards = column.cards.filter(card => card.id !== cardId);
-			if (column.id === columnId) {
-				newCards.splice(index, 0, card);
-				newColumn = column;
+			if (column.id !== columnId) {
+				return {
+					...column,
+					cards: newCards,
+				};
 			}
-			return {
+
+			newCards.splice(index, 0, card);
+			newColumn = {
 				...column,
 				cards: newCards,
 			};
+			return newColumn;
 		});
 		if (!newColumn) {
 			console.error(`Cannot find new column ${columnId}`);
@@ -208,17 +231,24 @@ export function Board<
 
 		setColumns(newColumns);
 		if (onCardMoved) {
-			onCardMoved(card, newColumn, newColumn.cards.indexOf(card));
+			onCardMoved(
+				card,
+				newColumn,
+				newColumn.cards.findIndex(card => card.id === cardId),
+				oldColumn,
+				oldIndex,
+			);
 		}
 	}
 
 	function moveColumn(columnId: string, index: number) {
-		const { newColumns, column } = columns.reduce(
-			(result, column) => {
+		const { newColumns, column, index: oldIndex } = columns.reduce(
+			(result, column, index) => {
 				if (column.id === columnId) {
 					return {
 						...result,
 						column,
+						index,
 					};
 				} else {
 					return {
@@ -230,6 +260,7 @@ export function Board<
 			{
 				newColumns: [] as TColumn[],
 				column: undefined as TColumn | undefined,
+				index: -1,
 			},
 		);
 		if (!column) {
@@ -241,7 +272,7 @@ export function Board<
 
 		setColumns(newColumns);
 		if (onColumnMoved) {
-			onColumnMoved(column, newColumns.indexOf(column));
+			onColumnMoved(column, newColumns.indexOf(column), oldIndex);
 		}
 	}
 
