@@ -29,7 +29,7 @@ interface Props<
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
 	 */
-	renderActions?: () => React.ReactNode;
+	actions?: () => React.ReactNode;
 }
 
 interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
@@ -97,7 +97,7 @@ export function KanbanColumn<
 
 	onNameChanged,
 
-	renderActions,
+	actions: renderActions,
 	children,
 }: Props<TColumn, TCard>) {
 	const classes = useStyles();

@@ -3,7 +3,10 @@ import React, { useState } from 'react';
 import { action } from '@storybook/addon-actions';
 
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+
+import CallToAction from '@material-ui/icons/CallToAction';
 
 import { Board, Card, Column, Intl } from '../../src';
 
@@ -193,10 +196,10 @@ export const ExternalChange = withDescription('Changing the data from the outsid
 export const CardInteraction = withDescription('Provide a handler for reacting on card clicks', () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
-	const clickAction = action('card clicked');
+	const cardClicked = action('card clicked');
 
 	function handleClick(card: Card, column: Column) {
-		clickAction({card, column});
+		cardClicked(`card ${card.id} in column ${column.id}`, {card, column});
 	}
 
 	return (
@@ -214,4 +217,33 @@ export const CardInteraction = withDescription('Provide a handler for reacting o
 
 export const Styling = withDescription('The board components can be styled', () => {
 	return <div>TODO: Implement an example for providing style overrides through 'classes'</div>
+});
+
+export const ColumnActions = withDescription('The column header can be customized', () => {
+	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
+
+	const columnActionClicked = action('column action');
+
+	function columnMenu(column: Column) {
+		return (
+			<IconButton
+				onClick={() => columnActionClicked(`column ${column.id}`, {column})}
+			>
+				{React.createElement(CallToAction)}
+			</IconButton>
+		);
+	}
+
+	return (
+		<Board
+			columns={columns}
+			onChange={setColumns}
+			createColumn={createColumn}
+			createCard={createCard}
+
+			columnActions={columnMenu}
+		>
+			{card => <SimpleCard card={card}/>}
+		</Board>
+	);
 });
