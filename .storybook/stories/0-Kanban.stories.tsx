@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 
 import { Board, Card, Column, Intl } from '../../src';
 
+import { withDescription } from '../utils';
+
 export default {
 	title: 'Kanban',
 	component: Board,
@@ -41,7 +43,7 @@ function SimpleCard<TCard extends Card = Card>({ card, children }: { card: TCard
 	);
 }
 
-export const Basic = () => {
+export const Basic = withDescription('The Kanban board provides columns and cards that can be dragged around', () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	const columnMoved = action('column moved');
@@ -65,16 +67,9 @@ export const Basic = () => {
 			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
-};
-Basic.parameters = {
-	docs: {
-		description: {
-			story: 'The Kanban board provides columns and cards that can be dragged around',
-		},
-	},
-};
+});
 
-export const Empty = () => {
+export const Empty = withDescription('A board can be empty initially', () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns([] as Column[]);
 
 	return (
@@ -87,16 +82,9 @@ export const Empty = () => {
 			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
-};
-Empty.parameters = {
-	docs: {
-		description: {
-			story: 'A board can be empty initially',
-		},
-	},
-};
+});
 
-export const ReadOnly = () => {
+export const ReadOnly = withDescription('By not providing the `createColumn` and/or `createCard` parameters the board no longer allows creating columns and cards, respectively.', () => {
 	const [columns, setColumns] = useColumns(COLUMNS);
 
 	return (
@@ -107,16 +95,9 @@ export const ReadOnly = () => {
 			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
-};
-ReadOnly.parameters = {
-	docs: {
-		description: {
-			story: 'By not providing the `createColumn` and/or `createCard` parameters the board no longer allows creating columns and cards, respectively.',
-		},
-	},
-};
+});
 
-export const I18n = () => {
+export const I18n = withDescription('The `intl` parameter can be used to configure the texts in the board controls', () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	const intl: Intl = {
@@ -135,17 +116,10 @@ export const I18n = () => {
 			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
-}
-I18n.parameters = {
-	docs: {
-		description: {
-			story: 'The `intl` parameter can be used to configure the texts in the board controls',
-		},
-	},
-};
+});
 I18n.storyName = 'I18n';
 
-export const GenericData = () => {
+export const GenericData = withDescription('The board handles generic data types and provides the correctly typed "card" in the render prop', () => {
 	interface MyCard extends Card {
 		index: number;
 	}
@@ -186,16 +160,9 @@ export const GenericData = () => {
 		</Board>
 	)
 
-};
-GenericData.parameters = {
-	docs: {
-		description: {
-			story: 'The board handles generic data types and provides the correctly typed "card" in the render prop',
-		},
-	},
-};
+});
 
-export const ExternalChange = () => {
+export const ExternalChange = withDescription('Changing the data from the outside requires re-creating the component', () => {
 	const [columns, setColumns] = useColumns(COLUMNS);
 	const [lastChange, setLastChange] = useState(Date.now())
 
@@ -221,16 +188,9 @@ export const ExternalChange = () => {
 		</>
 	);
 
-};
-ExternalChange.parameters = {
-	docs: {
-		description: {
-			story: 'Changing the data from the outside requires re-creating the component',
-		},
-	},
-};
+});
 
-export const CardInteraction = () => {
+export const CardInteraction = withDescription('Provide a handler for reacting on card clicks', () => {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	const clickAction = action('card clicked');
@@ -250,22 +210,8 @@ export const CardInteraction = () => {
 			{card => <SimpleCard card={card}/>}
 		</Board>
 	);
-};
-CardInteraction.parameters = {
-	docs: {
-		description: {
-			story: 'Provide a handler for reacting on card clicks',
-		},
-	},
-};
+});
 
-export const Styling = () => {
+export const Styling = withDescription('The board components can be styled', () => {
 	return <div>TODO: Implement an example for providing style overrides through 'classes'</div>
-}
-Styling.parameters = {
-	docs: {
-		description: {
-			story: 'The board components can be styled',
-		},
-	},
-};
+});
