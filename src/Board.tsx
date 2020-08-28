@@ -308,44 +308,42 @@ export function Board<
 	}, [onChange, columns]);
 
 	return (
-		<>
-			<div className={classes.content}>
-				<IntlContext.Provider value={intl ?? DEFAULT_INTL}>
-					<DragDropContext onDragEnd={handleDragEnd}>
-						<Droppable
-							droppableId="container"
-							type="column"
-							direction="horizontal"
-						>
-							{provided => (
-								<>
-									<List
-										{...provided.droppableProps}
-										innerRef={provided.innerRef}
-										component="nav"
-										className={classes.list}
+		<div className={classes.content}>
+			<IntlContext.Provider value={intl ?? DEFAULT_INTL}>
+				<DragDropContext onDragEnd={handleDragEnd}>
+					<Droppable
+						droppableId="container"
+						type="column"
+						direction="horizontal"
+					>
+						{provided => (
+							<>
+								<List
+									{...provided.droppableProps}
+									innerRef={provided.innerRef}
+									component="nav"
+									className={classes.list}
+								>
+									<InnerColumnList
+										columns={columns}
+										onChangeColumnName={handleChangeColumnName}
+										onAddCard={createCard && handleAddCard}
 									>
-										<InnerColumnList
-											columns={columns}
-											onChangeColumnName={handleChangeColumnName}
-											onAddCard={createCard && handleAddCard}
-										>
-											{children}
-										</InnerColumnList>
-									</List>
-									{provided.placeholder}
-									{createColumn && (
-										<AddColumnButton
-											onClick={handleAddColumn}
-											styles={{ container: classes.addColumnButton }}
-										/>
-									)}
-								</>
-							)}
-						</Droppable>
-					</DragDropContext>
-				</IntlContext.Provider>
-			</div>
-		</>
+										{children}
+									</InnerColumnList>
+								</List>
+								{provided.placeholder}
+								{createColumn && (
+									<AddColumnButton
+										onClick={handleAddColumn}
+										styles={{ container: classes.addColumnButton }}
+									/>
+								)}
+							</>
+						)}
+					</Droppable>
+				</DragDropContext>
+			</IntlContext.Provider>
+		</div>
 	);
 }
