@@ -130,7 +130,7 @@ function InnerColumnList<
 	);
 }
 
-interface Props<
+export interface BoardProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
 > extends Partial<WithStyles<BoardClassKey>> {
@@ -187,7 +187,7 @@ export function Board<
 	columnActions: renderColumnActions,
 
 	intl = DEFAULT_INTL,
-}: Props<TColumn, TCard>) {
+}: BoardProps<TColumn, TCard>) {
 	const classes = useStyles();
 	const [columns, setColumns] = useState(initialColumns);
 
