@@ -14,7 +14,7 @@ import {
 
 import * as Data from './data';
 
-import { KanbanColumn } from './components/KanbanColumn';
+import { KanbanColumn, KanbanColumnProps } from './components/KanbanColumn';
 import { AddColumnButton } from './components/AddColumnButton';
 import { Intl, IntlContext, DEFAULT_INTL } from './components/IntlContext';
 
@@ -57,7 +57,8 @@ const useStyles = makeStyles(styles);
 interface InnerColumnListProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
-> extends Partial<WithStyles<BoardClassKey>> {
+> extends Partial<WithStyles<BoardClassKey>>,
+		Pick<BoardProps<TColumn, TCard>, 'getColumnClassName'> {
 	columns: TColumn[];
 
 	onChangeColumnName?: (column: TColumn, name: string) => void;
@@ -81,6 +82,7 @@ function InnerColumnList<
 	onChangeColumnName: handleChangeColumnName,
 
 	columnActions: renderColumnActions,
+	getColumnClassName,
 
 	children,
 }: InnerColumnListProps<TColumn, TCard>) {
@@ -101,6 +103,7 @@ function InnerColumnList<
 								key={column.id}
 								index={index}
 								column={column}
+								getColumnClassName={getColumnClassName}
 								onNameChanged={
 									handleChangeColumnName
 										? name => handleChangeColumnName(column, name)
@@ -133,7 +136,8 @@ function InnerColumnList<
 export interface BoardProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
-> extends Partial<WithStyles<BoardClassKey>> {
+> extends Partial<WithStyles<BoardClassKey>>,
+		Pick<KanbanColumnProps<TColumn, TCard>, 'getColumnClassName'> {
 	columns: TColumn[];
 	onChange?: (newColumns: TColumn[]) => void;
 
@@ -181,6 +185,8 @@ export function Board<
 	onCardAdded,
 	onCardMoved,
 	onCardClicked: handleCardClicked,
+
+	getColumnClassName,
 
 	children,
 
@@ -390,6 +396,7 @@ export function Board<
 								>
 									<InnerColumnList
 										columns={columns}
+										getColumnClassName={getColumnClassName}
 										onChangeColumnName={handleChangeColumnName}
 										onAddCard={createCard && handleAddCard}
 										onCardClicked={handleCardClicked}

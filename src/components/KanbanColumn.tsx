@@ -11,7 +11,7 @@ import { AddCardButton } from './AddCardButton';
 import { ColumnHeader } from './ColumnHeader';
 import { KanbanCard } from './KanbanCard';
 
-interface Props<
+export interface KanbanColumnProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
 > {
@@ -30,6 +30,16 @@ interface Props<
 	 * Render a button or similar control that provides additional per-column actions.
 	 */
 	actions?: () => React.ReactNode;
+
+	/**
+	 * Allows clients to style columns
+	 *
+	 * @param colum To be styled column
+	 *
+	 * @returns Name of the CSS class that should be attached to the column. Return
+	 * 	`undefined` to keep standard styling
+	 */
+	getColumnClassName?: (colum: TColumn) => string | undefined;
 }
 
 interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
@@ -96,10 +106,11 @@ export function KanbanColumn<
 	onOpenCard: handleClick,
 
 	onNameChanged,
+	getColumnClassName,
 
 	actions: renderActions,
 	children,
-}: Props<TColumn, TCard>) {
+}: KanbanColumnProps<TColumn, TCard>) {
 	const classes = useStyles();
 
 	function handleNameChange(newName: string) {
@@ -117,9 +128,13 @@ export function KanbanColumn<
 					{...provided.droppableProps}
 					elevation={0}
 					innerRef={provided.innerRef}
-					className={clsx(classes.paper, {
-						[classes.draggingOver]: snapshot.isDraggingOver,
-					})}
+					className={clsx(
+						classes.paper,
+						getColumnClassName ? getColumnClassName(column) : undefined,
+						{
+							[classes.draggingOver]: snapshot.isDraggingOver,
+						},
+					)}
 				>
 					<ColumnHeader
 						name={column.name}

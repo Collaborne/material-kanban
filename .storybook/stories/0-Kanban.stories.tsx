@@ -12,6 +12,7 @@ import { ExternalChangeStory } from './external-change';
 import { GenericDataStory } from './generic-data';
 import { I18nStory } from './i18n';
 import { ReadOnlyStory } from './readonly';
+import { StylingStory } from './styling';
 
 export default {
 	title: 'Kanban',
@@ -55,9 +56,10 @@ export const CardInteraction = withDescription(
 	() => <CardInteractionStory />,
 );
 
-export const Styling = withDescription('The board components can be styled', () => {
-	return <div>TODO: Implement an example for providing style overrides through 'classes'</div>
-});
+export const Styling = withDescription(
+	'The columns of the board can be styled',
+	() => <StylingStory />,
+);
 
 export const ColumnActions = withDescription(
 	'The column header can be customized',

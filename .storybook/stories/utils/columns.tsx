@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Card, Column } from '../../src';
+import { Card, Column } from '../../../src';
 
 export const COLUMNS: Column[] = [
 	{ id: 'column1', name: 'Column 1', cards: [ { id: 'card_column1_1' } ] },
