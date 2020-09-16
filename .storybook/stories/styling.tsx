@@ -16,12 +16,20 @@ const COLUMNS: ColoredColumn[] = [
 	{ id: 'column3', name: 'No color', cards: [] },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
 	green: {
 		background: 'lightgreen',
 	},
 	blue: {
 		background: 'lightblue',
+	},
+	addCardButton: {
+		color: theme.palette.text.secondary,
+		textTransform: 'none',
+	},
+	addColumnButton: {
+		color: theme.palette.text.disabled,
+		textTransform: 'none',
 	},
 }));
 
@@ -47,6 +55,10 @@ export function StylingStory() {
 			createColumn={createColumn}
 			createCard={createCard}
 			getColumnClassName={getColumnClassName}
+			styles={{
+				addCardButton: classes.addCardButton,
+				addColumnButton: classes.addColumnButton,
+			}}
 		>
 			{card => <SimpleCard card={card}/>}
 		</Board>

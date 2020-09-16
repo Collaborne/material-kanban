@@ -7,7 +7,7 @@ import { Droppable } from 'react-beautiful-dnd';
 
 import * as Data from '../data';
 
-import { AddCardButton } from './AddCardButton';
+import { AddCardButton, AddCardButtonStyles } from './AddCardButton';
 import { ColumnHeader } from './ColumnHeader';
 import { KanbanCard } from './KanbanCard';
 
@@ -18,6 +18,8 @@ export interface KanbanColumnProps<
 	column: TColumn;
 	isDragging: boolean;
 	index: number;
+
+	styles?: AddCardButtonStyles;
 
 	onNameChanged?: (name: string) => void;
 
@@ -110,6 +112,7 @@ export function KanbanColumn<
 
 	actions: renderActions,
 	children,
+	...props
 }: KanbanColumnProps<TColumn, TCard>) {
 	const classes = useStyles();
 
@@ -147,7 +150,9 @@ export function KanbanColumn<
 							{children}
 						</InnerObjectsList>
 						{provided.placeholder}
-						{handleAddCard && <AddCardButton onClick={handleAddCard} />}
+						{handleAddCard && (
+							<AddCardButton onClick={handleAddCard} styles={props.styles} />
+						)}
 					</List>
 				</Paper>
 			)}
