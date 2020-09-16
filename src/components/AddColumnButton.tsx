@@ -3,7 +3,6 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-import clsx from 'clsx';
 
 import { IntlContext } from './IntlContext';
 
@@ -16,7 +15,7 @@ interface Props {
 }
 
 const useStyles = makeStyles(theme => ({
-	button: {
+	container: {
 		marginTop: theme.spacing(1),
 	},
 }));
@@ -25,14 +24,14 @@ export function AddColumnButton({ onClick, styles }: Props) {
 	const classes = useStyles();
 
 	return (
-		<div>
+		<div className={classes.container}>
 			<IntlContext.Consumer>
 				{intl => (
 					<Button
 						startIcon={<AddIcon />}
 						onClick={onClick}
 						color="inherit"
-						className={clsx(classes.button, styles?.addColumnButton)}
+						className={styles?.addColumnButton}
 					>
 						{intl.addColumnButtonLabel}
 					</Button>

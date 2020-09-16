@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
 	addColumnButton: {
 		color: theme.palette.text.disabled,
 		textTransform: 'none',
+		padding: '1px 16px',
 	},
 }));
 
