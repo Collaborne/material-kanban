@@ -23,9 +23,13 @@
     "storybook:build": "build-storybook --quiet -s public"
   },
   "peerDependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "react": "^16.0.0"
   },
   "devDependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@storybook/addon-actions": "^6.0.20",
     "@storybook/addon-backgrounds": "^6.0.19",
     "@storybook/addon-docs": "^6.0.12",
@@ -72,8 +76,6 @@
     "tsconfig.json"
   ],
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "^4.9.1",
     "@types/react-beautiful-dnd": "^13.0.0",
     "react-beautiful-dnd": "^13.0.0"
   }
