@@ -67,7 +67,9 @@
     "typescript": "^3.8.0"
   },
   "files": [
-    "dist"
+    "dist",
+    "src",
+    "tsconfig.json"
   ],
   "dependencies": {
     "@material-ui/core": "^4.11.0",
