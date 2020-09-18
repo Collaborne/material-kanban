@@ -16,7 +16,7 @@ export function ColumnActionsStory() {
 	function columnMenu(column: Column) {
 		return (
 			<IconButton
-				onClick={() => columnActionClicked(`column ${column.id}`, {column})}
+				onClick={() => columnActionClicked(`column ${column.id}`, { column })}
 			>
 				{React.createElement(CallToAction)}
 			</IconButton>
@@ -29,10 +29,9 @@ export function ColumnActionsStory() {
 			onChange={setColumns}
 			createColumn={createColumn}
 			createCard={createCard}
-
 			columnActions={columnMenu}
 		>
-			{card => <SimpleCard card={card}/>}
+			{card => <SimpleCard card={card} />}
 		</Board>
 	);
 }

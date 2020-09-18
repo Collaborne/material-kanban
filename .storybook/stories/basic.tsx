@@ -10,12 +10,25 @@ export function BasicStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	const columnMoved = action('column moved');
-	function handleColumnMove(column: Column, newIndex: number, oldIndex: number) {
-		columnMoved(`${column.id} from ${oldIndex} to ${newIndex}`, {column});
+	function handleColumnMove(
+		column: Column,
+		newIndex: number,
+		oldIndex: number,
+	) {
+		columnMoved(`${column.id} from ${oldIndex} to ${newIndex}`, { column });
 	}
 	const cardMoved = action('card moved');
-	function handleCardMove(card: Card, newColumn: Column, newIndex: number, oldColumn: Column, oldIndex: number) {
-		cardMoved(`${card.id} from ${oldColumn.id} position ${oldIndex} to ${newColumn.id} position ${newIndex}`, {card, oldColumn, newColumn});
+	function handleCardMove(
+		card: Card,
+		newColumn: Column,
+		newIndex: number,
+		oldColumn: Column,
+		oldIndex: number,
+	) {
+		cardMoved(
+			`${card.id} from ${oldColumn.id} position ${oldIndex} to ${newColumn.id} position ${newIndex}`,
+			{ card, oldColumn, newColumn },
+		);
 	}
 
 	return (
@@ -27,7 +40,7 @@ export function BasicStory() {
 			onCardMoved={handleCardMove}
 			onColumnMoved={handleColumnMove}
 		>
-			{card => <SimpleCard card={card}/>}
+			{card => <SimpleCard card={card} />}
 		</Board>
 	);
 }

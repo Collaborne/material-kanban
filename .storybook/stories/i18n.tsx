@@ -21,7 +21,7 @@ export function I18nStory() {
 			createCard={createCard}
 			intl={intl}
 		>
-			{card => <SimpleCard card={card}/>}
+			{card => <SimpleCard card={card} />}
 		</Board>
 	);
 }

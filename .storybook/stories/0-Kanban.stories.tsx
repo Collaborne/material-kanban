@@ -25,10 +25,9 @@ export const Basic = withDescription(
 	() => <BasicStory />,
 );
 
-export const Empty = withDescription(
-	'A board can be empty initially',
-	() => <EmptyStory />,
-);
+export const Empty = withDescription('A board can be empty initially', () => (
+	<EmptyStory />
+));
 
 export const ReadOnly = withDescription(
 	'By not providing the `createColumn` and/or `createCard` parameters the board no longer allows creating columns and cards, respectively.',

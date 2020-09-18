@@ -12,7 +12,7 @@ export function CardInteractionStory() {
 	const cardClicked = action('card clicked');
 
 	function handleClick(card: Card, column: Column) {
-		cardClicked(`card ${card.id} in column ${column.id}`, {card, column});
+		cardClicked(`card ${card.id} in column ${column.id}`, { card, column });
 	}
 
 	return (
@@ -23,7 +23,7 @@ export function CardInteractionStory() {
 			createCard={createCard}
 			onCardClicked={handleClick}
 		>
-			{card => <SimpleCard card={card}/>}
+			{card => <SimpleCard card={card} />}
 		</Board>
 	);
 }

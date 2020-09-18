@@ -54,7 +54,8 @@ const useStyles = makeStyles(theme => ({
 interface InnerColumnListProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
-> extends Partial<WithStyles<BoardClassKey>>,
+>
+	extends Partial<WithStyles<BoardClassKey>>,
 		Pick<BoardProps<TColumn, TCard>, 'getColumnClassName' | 'styles'> {
 	columns: TColumn[];
 
@@ -137,7 +138,8 @@ type Styles = AddCardButtonStyles & AddColumnButtonStyles;
 export interface BoardProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
-> extends Partial<WithStyles<BoardClassKey>>,
+>
+	extends Partial<WithStyles<BoardClassKey>>,
 		Pick<KanbanColumnProps<TColumn, TCard>, 'getColumnClassName'> {
 	columns: TColumn[];
 	onChange?: (newColumns: TColumn[]) => void;

@@ -11,7 +11,12 @@ interface ColoredColumn extends Column {
 }
 
 const COLUMNS: ColoredColumn[] = [
-	{ id: 'column1', name: 'Green', color: 'green', cards: [ { id: 'card_column1_1' } ] },
+	{
+		id: 'column1',
+		name: 'Green',
+		color: 'green',
+		cards: [{ id: 'card_column1_1' }],
+	},
 	{ id: 'column2', name: 'Blue', color: 'blue', cards: [] },
 	{ id: 'column3', name: 'No color', cards: [] },
 ];
@@ -36,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 
 export function StylingStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
-	const classes = useStyles()
+	const classes = useStyles();
 
 	const getColumnClassName = (column: ColoredColumn) => {
 		switch (column.color) {
@@ -61,7 +66,7 @@ export function StylingStory() {
 				addColumnButton: classes.addColumnButton,
 			}}
 		>
-			{card => <SimpleCard card={card}/>}
+			{card => <SimpleCard card={card} />}
 		</Board>
 	);
 }

@@ -9,11 +9,8 @@ export function ReadOnlyStory() {
 	const [columns, setColumns] = useColumns(COLUMNS);
 
 	return (
-		<Board
-			columns={columns}
-			onChange={setColumns}
-		>
-			{card => <SimpleCard card={card}/>}
+		<Board columns={columns} onChange={setColumns}>
+			{card => <SimpleCard card={card} />}
 		</Board>
 	);
 }

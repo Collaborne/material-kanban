@@ -42,7 +42,11 @@ export function GenericDataStory() {
 			createColumn={createMyColumn}
 			createCard={createMyCard}
 		>
-			{card => <SimpleCard card={card}>{card => `${card.id}: ${card.index}`}</SimpleCard>}
+			{card => (
+				<SimpleCard card={card}>
+					{card => `${card.id}: ${card.index}`}
+				</SimpleCard>
+			)}
 		</Board>
 	);
 }

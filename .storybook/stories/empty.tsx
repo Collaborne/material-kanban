@@ -6,7 +6,9 @@ import { useColumns } from './utils/columns';
 import { SimpleCard } from './utils/card';
 
 export function EmptyStory() {
-	const [columns, setColumns, createColumn, createCard] = useColumns([] as Column[]);
+	const [columns, setColumns, createColumn, createCard] = useColumns(
+		[] as Column[],
+	);
 
 	return (
 		<Board
@@ -15,7 +17,7 @@ export function EmptyStory() {
 			createColumn={createColumn}
 			createCard={createCard}
 		>
-			{card => <SimpleCard card={card}/>}
+			{card => <SimpleCard card={card} />}
 		</Board>
 	);
 }

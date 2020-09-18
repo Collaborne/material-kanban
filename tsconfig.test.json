@@ -4,7 +4,7 @@
     "module": "commonjs"
   },
   "include": [
-    "src",
-    ".storybook/stories"
+    "src/**/*",
+    ".storybook/stories/**/*"
   ]
 }
