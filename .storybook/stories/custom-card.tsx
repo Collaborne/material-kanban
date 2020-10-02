@@ -1,18 +1,24 @@
-import React, { useState } from 'react';
-import MaterialCard from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import React from 'react';
 
 import { Board, Card } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
 import { DraggableProvided } from 'react-beautiful-dnd';
 
-function AsciiArtCard({ card, provided }: { card: Card; provided: DraggableProvided}) {
+interface AsciiArtCardProps {
+	card: Card;
+	provided: DraggableProvided;
+}
+function AsciiArtCard({ card, provided }: AsciiArtCardProps) {
 	return (
-		<div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
-			+--------------------------------+<br />
-			| {card.id} |<br />
-			+--------------------------------+<br />
+		<div
+			{...provided.dragHandleProps}
+			{...provided.draggableProps}
+			ref={provided.innerRef}
+		>
+			+--------------------------------+
+			<br />| {card.id} |<br />
+			+--------------------------------+
 		</div>
 	);
 }

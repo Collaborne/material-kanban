@@ -46,7 +46,7 @@ export interface KanbanColumnProps<
 interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
 	cards: TCard[];
 
-	children: RenderCard<TCard>;
+	children?: RenderCard<TCard>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -130,7 +130,7 @@ export function KanbanColumn<
 					/>
 
 					<List className={classes.list}>
-						<InnerObjectsList cards={column.cards}>{children}</InnerObjectsList>
+						<InnerObjectsList cards={column.cards} children={children} />
 						{provided.placeholder}
 						{handleAddCard && (
 							<AddCardButton onClick={handleAddCard} styles={props.styles} />

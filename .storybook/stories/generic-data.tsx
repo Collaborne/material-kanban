@@ -44,7 +44,11 @@ export function GenericDataStory() {
 			createCard={createMyCard}
 		>
 			{(card, provided) => (
-				<MaterialCard {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+				<MaterialCard
+					{...provided.dragHandleProps}
+					{...provided.draggableProps}
+					ref={provided.innerRef}
+				>
 					<CardContent>
 						{card.id}: {card.index}
 					</CardContent>
