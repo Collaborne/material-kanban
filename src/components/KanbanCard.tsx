@@ -60,7 +60,11 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 	),
 }: Props<TCard>) {
 	return (
-		<Draggable draggableId={card.id} index={index}>
+		<Draggable
+			draggableId={card.id}
+			index={index}
+			disableInteractiveElementBlocking
+		>
 			{provided => children(card, provided) || <div />}
 		</Draggable>
 	);

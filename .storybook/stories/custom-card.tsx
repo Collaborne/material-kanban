@@ -11,15 +11,16 @@ interface AsciiArtCardProps {
 }
 function AsciiArtCard({ card, provided }: AsciiArtCardProps) {
 	return (
-		<div
+		<button
 			{...provided.dragHandleProps}
 			{...provided.draggableProps}
 			ref={provided.innerRef}
+			onClick={() => window.alert('Clicked')}
 		>
 			+--------------------------------+
 			<br />| {card.id} |<br />
 			+--------------------------------+
-		</div>
+		</button>
 	);
 }
 
