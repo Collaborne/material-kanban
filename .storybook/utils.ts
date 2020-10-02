@@ -1,8 +1,14 @@
 import { StoryFn, Annotations, Args } from '@storybook/addons';
 
-type OptionalStoryInterface<Args, ReturnType> = Annotations<Args, ReturnType> & { storyName?: string };
+type OptionalStoryInterface<Args, ReturnType> = Annotations<
+	Args,
+	ReturnType
+> & { storyName?: string };
 
-export function withDescription<T extends StoryFn<R> & OptionalStoryInterface<Args, R>, R>(storyDescription: string, story: T): T & OptionalStoryInterface<Args, R> {
+export function withDescription<
+	T extends StoryFn<R> & OptionalStoryInterface<Args, R>,
+	R
+>(storyDescription: string, story: T): T & OptionalStoryInterface<Args, R> {
 	story.parameters = {
 		...story.parameters,
 		docs: {
