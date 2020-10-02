@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import MaterialCard from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 import { Board, Card, Column } from '../../src';
 
 import { COLUMNS } from './utils/columns';
-import { SimpleCard } from './utils/card';
 
 export function GenericDataStory() {
 	interface MyCard extends Card {
@@ -42,10 +43,12 @@ export function GenericDataStory() {
 			createColumn={createMyColumn}
 			createCard={createMyCard}
 		>
-			{card => (
-				<SimpleCard card={card}>
-					{card => `${card.id}: ${card.index}`}
-				</SimpleCard>
+			{(card, provided) => (
+				<MaterialCard {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+					<CardContent>
+						{card.id}: {card.index}
+					</CardContent>
+				</MaterialCard>
 			)}
 		</Board>
 	);

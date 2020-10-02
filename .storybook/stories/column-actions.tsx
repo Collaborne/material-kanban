@@ -6,7 +6,6 @@ import CallToAction from '@material-ui/icons/CallToAction';
 import { Board, Column } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
-import { SimpleCard } from './utils/card';
 
 export function ColumnActionsStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
@@ -30,8 +29,6 @@ export function ColumnActionsStory() {
 			createColumn={createColumn}
 			createCard={createCard}
 			columnActions={columnMenu}
-		>
-			{card => <SimpleCard card={card} />}
-		</Board>
+		/>
 	);
 }

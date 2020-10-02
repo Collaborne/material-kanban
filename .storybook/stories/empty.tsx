@@ -3,7 +3,6 @@ import React from 'react';
 import { Board, Column } from '../../src';
 
 import { useColumns } from './utils/columns';
-import { SimpleCard } from './utils/card';
 
 export function EmptyStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(
@@ -16,8 +15,6 @@ export function EmptyStory() {
 			onChange={setColumns}
 			createColumn={createColumn}
 			createCard={createCard}
-		>
-			{card => <SimpleCard card={card} />}
-		</Board>
+		/>
 	);
 }

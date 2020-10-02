@@ -5,8 +5,8 @@ import { Board } from '../../src';
 import { withDescription } from '../utils';
 
 import { BasicStory } from './basic';
-import { CardInteractionStory } from './card-interaction';
 import { ColumnActionsStory } from './column-actions';
+import { CustomCardStory } from './custom-card';
 import { EmptyStory } from './empty';
 import { ExternalChangeStory } from './external-change';
 import { GenericDataStory } from './generic-data';
@@ -50,11 +50,6 @@ export const ExternalChange = withDescription(
 	() => <ExternalChangeStory />,
 );
 
-export const CardInteraction = withDescription(
-	'Provide a handler for reacting on card clicks',
-	() => <CardInteractionStory />,
-);
-
 export const Styling = withDescription(
 	'The columns of the board can be styled',
 	() => <StylingStory />,
@@ -63,4 +58,9 @@ export const Styling = withDescription(
 export const ColumnActions = withDescription(
 	'The column header can be customized',
 	() => <ColumnActionsStory />,
+);
+
+export const CustomCard = withDescription(
+	'Card renderer can be changed',
+	() => <CustomCardStory />,
 );

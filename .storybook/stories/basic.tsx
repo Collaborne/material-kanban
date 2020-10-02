@@ -4,7 +4,6 @@ import { action } from '@storybook/addon-actions';
 import { Board, Card, Column } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
-import { SimpleCard } from './utils/card';
 
 export function BasicStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
@@ -39,8 +38,6 @@ export function BasicStory() {
 			createCard={createCard}
 			onCardMoved={handleCardMove}
 			onColumnMoved={handleColumnMove}
-		>
-			{card => <SimpleCard card={card} />}
-		</Board>
+		/>
 	);
 }

@@ -21,6 +21,7 @@ import {
 	AddColumnButtonStyles,
 } from './components/AddColumnButton';
 import { Intl, IntlContext, DEFAULT_INTL } from './components/IntlContext';
+import { RenderCard } from './components/KanbanCard';
 
 /** Styles that can be modified by a caller */
 export type BoardClassKey = never;
@@ -62,11 +63,9 @@ interface InnerColumnListProps<
 
 	onAddCard?: (column: TColumn) => void;
 
-	onCardClicked?: (card: TCard, column: TColumn) => void;
-
 	columnActions?: (column: TColumn) => React.ReactNode;
 
-	children: (card: TCard) => React.ReactNode;
+	children?: RenderCard<TCard>;
 }
 
 function InnerColumnList<
@@ -75,7 +74,6 @@ function InnerColumnList<
 >({
 	columns,
 	onAddCard: handleAddCard,
-	onCardClicked: handleCardClicked,
 	onChangeColumnName: handleChangeColumnName,
 
 	columnActions: renderColumnActions,
@@ -109,11 +107,6 @@ function InnerColumnList<
 								}
 								onAddCard={
 									handleAddCard ? () => handleAddCard(column) : undefined
-								}
-								onOpenCard={
-									handleCardClicked
-										? card => handleCardClicked(card, column)
-										: undefined
 								}
 								actions={
 									renderColumnActions
@@ -164,11 +157,10 @@ export interface BoardProps<
 		oldColumn: TColumn,
 		oldIndex: number,
 	) => void;
-	onCardClicked?: (card: TCard, column: TColumn) => void;
 
 	columnActions?: (column: TColumn) => React.ReactNode;
 
-	children: (card: TCard) => React.ReactNode;
+	children?: RenderCard<TCard>;
 }
 
 export function Board<
@@ -186,7 +178,6 @@ export function Board<
 	onColumnNameChanged: handleChangeColumnName,
 	onCardAdded,
 	onCardMoved,
-	onCardClicked: handleCardClicked,
 
 	getColumnClassName,
 
@@ -402,7 +393,6 @@ export function Board<
 										getColumnClassName={getColumnClassName}
 										onChangeColumnName={handleChangeColumnName}
 										onAddCard={createCard && handleAddCard}
-										onCardClicked={handleCardClicked}
 										columnActions={renderColumnActions}
 										styles={props.styles}
 									>

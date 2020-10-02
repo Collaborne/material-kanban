@@ -9,7 +9,7 @@ import * as Data from '../data';
 
 import { AddCardButton, AddCardButtonStyles } from './AddCardButton';
 import { ColumnHeader } from './ColumnHeader';
-import { KanbanCard } from './KanbanCard';
+import { KanbanCard, RenderCard } from './KanbanCard';
 
 export interface KanbanColumnProps<
 	TColumn extends Data.Column<TCard>,
@@ -24,9 +24,8 @@ export interface KanbanColumnProps<
 	onNameChanged?: (name: string) => void;
 
 	onAddCard?: () => void;
-	onOpenCard?: (card: TCard) => void;
 
-	children: (card: TCard) => React.ReactNode;
+	children?: RenderCard<TCard>;
 
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
@@ -47,9 +46,7 @@ export interface KanbanColumnProps<
 interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
 	cards: TCard[];
 
-	onClick?: (card: TCard) => void;
-
-	children: (card: TCard) => React.ReactNode;
+	children: RenderCard<TCard>;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -64,9 +61,6 @@ const useStyles = makeStyles(theme => ({
 	draggingOver: {
 		backgroundColor: theme.palette.secondary.main,
 	},
-	object: {
-		marginBottom: theme.spacing(1),
-	},
 	list: {
 		flexGrow: 1,
 		overflowY: 'auto',
@@ -77,21 +71,12 @@ const useStyles = makeStyles(theme => ({
 // FIXME: Bring back React.memo()
 function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 	cards,
-	onClick: handleClick,
 	children,
 }: InnerObjectsListProps<TCard>) {
-	const classes = useStyles();
-
 	return (
 		<>
 			{cards.map((card, index) => (
-				<KanbanCard
-					key={card.id}
-					card={card}
-					index={index}
-					className={classes.object}
-					onClick={handleClick ? () => handleClick(card) : undefined}
-				>
+				<KanbanCard key={card.id} card={card} index={index}>
 					{children}
 				</KanbanCard>
 			))}
@@ -105,7 +90,6 @@ export function KanbanColumn<
 >({
 	column,
 	onAddCard: handleAddCard,
-	onOpenCard: handleClick,
 
 	onNameChanged,
 	getColumnClassName,
@@ -146,9 +130,7 @@ export function KanbanColumn<
 					/>
 
 					<List className={classes.list}>
-						<InnerObjectsList cards={column.cards} onClick={handleClick}>
-							{children}
-						</InnerObjectsList>
+						<InnerObjectsList cards={column.cards}>{children}</InnerObjectsList>
 						{provided.placeholder}
 						{handleAddCard && (
 							<AddCardButton onClick={handleAddCard} styles={props.styles} />

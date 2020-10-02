@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core';
 import { Board, Column } from '../../src';
 
 import { useColumns } from './utils/columns';
-import { SimpleCard } from './utils/card';
 
 interface ColoredColumn extends Column {
 	color?: string;
@@ -65,8 +64,6 @@ export function StylingStory() {
 				addCardButton: classes.addCardButton,
 				addColumnButton: classes.addColumnButton,
 			}}
-		>
-			{card => <SimpleCard card={card} />}
-		</Board>
+		/>
 	);
 }
