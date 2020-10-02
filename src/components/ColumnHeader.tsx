@@ -15,9 +15,7 @@ interface Props {
 
 const useStyles = makeStyles(theme => ({
 	name: {
-		paddingTop: theme.spacing(0.5),
-		paddingLeft: theme.spacing(2),
-		paddingRight: theme.spacing(2),
+		padding: theme.spacing(0.5, 1, 0, 1),
 		fontWeight: 'bold',
 	},
 }));
