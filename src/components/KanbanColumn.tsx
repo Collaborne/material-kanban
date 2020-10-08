@@ -64,7 +64,7 @@ const useStyles = makeStyles(theme => ({
 	list: {
 		flexGrow: 1,
 		overflowY: 'auto',
-		padding: theme.spacing(0, 1, 1, 1),
+		padding: theme.spacing(0.25, 1, 1, 1),
 	},
 }));
 
