@@ -142,7 +142,6 @@ export interface BoardProps<
 
 	onColumnAdded?: (column: TColumn, index: number) => void;
 	onColumnMoved?: (column: TColumn, newIndex: number, oldIndex: number) => void;
-	onColumnNameChanged?: (column: TColumn, name: string) => Promise<void>;
 
 	onCardAdded?: (card: TCard, column: TColumn, index: number) => void;
 	onCardMoved?: (
