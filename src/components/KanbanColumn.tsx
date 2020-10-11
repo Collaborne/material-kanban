@@ -11,6 +11,10 @@ import { AddCardButton, AddCardButtonStyles } from './AddCardButton';
 import { ColumnHeader } from './ColumnHeader';
 import { KanbanCard, RenderCard } from './KanbanCard';
 
+export interface KanbanColumnStyles extends AddCardButtonStyles {
+	column?: string;
+}
+
 export interface KanbanColumnProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
@@ -19,7 +23,7 @@ export interface KanbanColumnProps<
 	isDragging: boolean;
 	index: number;
 
-	styles?: AddCardButtonStyles;
+	styles?: KanbanColumnStyles;
 
 	onNameChanged?: (name: string) => void;
 
@@ -114,6 +118,7 @@ export function KanbanColumn<
 					innerRef={provided.innerRef}
 					className={clsx(
 						classes.paper,
+						props.styles?.column,
 						getColumnClassName ? getColumnClassName(column) : undefined,
 					)}
 				>

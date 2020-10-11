@@ -15,7 +15,7 @@ interface Props {
 
 const useStyles = makeStyles(theme => ({
 	name: {
-		padding: theme.spacing(0.5, 1, 0, 1),
+		padding: theme.spacing(0, 1),
 		fontWeight: 'bold',
 	},
 }));
@@ -34,7 +34,7 @@ export const ColumnHeader = React.memo((props: Props) => {
 	return (
 		<IntlContext.Consumer>
 			{intl => (
-				<Box display="flex" mx={1}>
+				<Box display="flex" mx={1} alignItems="center">
 					<InputBase
 						className={classes.name}
 						value={name}
