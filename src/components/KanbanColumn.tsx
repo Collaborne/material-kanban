@@ -58,9 +58,6 @@ const useStyles = makeStyles(theme => ({
 		flexDirection: 'column',
 		position: 'relative',
 	},
-	draggingOver: {
-		backgroundColor: theme.palette.secondary.main,
-	},
 	list: {
 		flexGrow: 1,
 		overflowY: 'auto',
@@ -110,7 +107,7 @@ export function KanbanColumn<
 
 	return (
 		<Droppable droppableId={column.id} type="card">
-			{(provided, snapshot) => (
+			{provided => (
 				<Paper
 					{...provided.droppableProps}
 					elevation={0}
@@ -118,9 +115,6 @@ export function KanbanColumn<
 					className={clsx(
 						classes.paper,
 						getColumnClassName ? getColumnClassName(column) : undefined,
-						{
-							[classes.draggingOver]: snapshot.isDraggingOver,
-						},
 					)}
 				>
 					<ColumnHeader
