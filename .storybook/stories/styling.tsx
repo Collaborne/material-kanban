@@ -36,6 +36,9 @@ const useStyles = makeStyles(theme => ({
 		textTransform: 'none',
 		padding: '1px 16px',
 	},
+	column: {
+		width: theme.spacing(33),
+	},
 	columnHeaderName: {
 		color: 'red',
 	},
@@ -69,6 +72,7 @@ export function StylingStory() {
 			styles={{
 				addCardButton: classes.addCardButton,
 				addColumnButton: classes.addColumnButton,
+				column: classes.column,
 				columnHeaderName: classes.columnHeaderName,
 				columnHeaderRoot: classes.columnHeaderRoot,
 			}}
