@@ -4,13 +4,18 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-import { Draggable, DraggableProvided } from 'react-beautiful-dnd';
+import {
+	Draggable,
+	DraggableProvided,
+	DraggableStateSnapshot,
+} from 'react-beautiful-dnd';
 
 import * as Data from '../data';
 
 export type RenderCard<TCard extends Data.Card> = (
 	card: TCard,
 	provided: DraggableProvided,
+	snapshot: DraggableStateSnapshot,
 ) => React.ReactElement<HTMLElement>;
 
 interface Props<TCard extends Data.Card = Data.Card> {
@@ -65,7 +70,7 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 			index={index}
 			disableInteractiveElementBlocking
 		>
-			{provided => children(card, provided) || <div />}
+			{(provided, snapshot) => children(card, provided, snapshot) || <div />}
 		</Draggable>
 	);
 }
