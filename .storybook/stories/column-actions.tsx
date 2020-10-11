@@ -28,7 +28,7 @@ export function ColumnActionsStory() {
 			onChange={setColumns}
 			createColumn={createColumn}
 			createCard={createCard}
-			columnActions={columnMenu}
+			renderColumnActions={columnMenu}
 		/>
 	);
 }

@@ -14,7 +14,11 @@ import {
 
 import * as Data from './data';
 
-import { KanbanColumn, KanbanColumnProps } from './components/KanbanColumn';
+import {
+	KanbanColumn,
+	KanbanColumnProps,
+	KanbanColumnStyles,
+} from './components/KanbanColumn';
 import { AddCardButtonStyles } from './components/AddCardButton';
 import {
 	AddColumnButton,
@@ -56,7 +60,10 @@ interface InnerColumnListProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
 > extends Partial<WithStyles<BoardClassKey>>,
-		Pick<BoardProps<TColumn, TCard>, 'getColumnClassName' | 'styles'> {
+		Pick<
+			BoardProps<TColumn, TCard>,
+			'getColumnClassName' | 'styles' | 'renderColumnActions'
+		> {
 	columns: TColumn[];
 
 	onChangeColumnName?: (column: TColumn, name: string) => void;
@@ -74,10 +81,6 @@ function InnerColumnList<
 >({
 	columns,
 	onAddCard: handleAddCard,
-	onChangeColumnName: handleChangeColumnName,
-
-	columnActions: renderColumnActions,
-	getColumnClassName,
 
 	children,
 	...props
@@ -95,25 +98,14 @@ function InnerColumnList<
 							className={classes.columnContainer}
 						>
 							<KanbanColumn
+								{...props}
 								isDragging={snapshot.isDragging}
 								key={column.id}
 								index={index}
 								column={column}
-								getColumnClassName={getColumnClassName}
-								onNameChanged={
-									handleChangeColumnName
-										? name => handleChangeColumnName(column, name)
-										: undefined
-								}
 								onAddCard={
 									handleAddCard ? () => handleAddCard(column) : undefined
 								}
-								actions={
-									renderColumnActions
-										? () => renderColumnActions(column)
-										: undefined
-								}
-								styles={props.styles}
 							>
 								{children}
 							</KanbanColumn>
@@ -125,13 +117,16 @@ function InnerColumnList<
 	);
 }
 
-type Styles = AddCardButtonStyles & AddColumnButtonStyles;
+type Styles = AddCardButtonStyles & AddColumnButtonStyles & KanbanColumnStyles;
 
 export interface BoardProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
 > extends Partial<WithStyles<BoardClassKey>>,
-		Pick<KanbanColumnProps<TColumn, TCard>, 'getColumnClassName'> {
+		Pick<
+			KanbanColumnProps<TColumn, TCard>,
+			'getColumnClassName' | 'renderColumnActions'
+		> {
 	columns: TColumn[];
 	onChange?: (newColumns: TColumn[]) => void;
 
@@ -158,8 +153,6 @@ export interface BoardProps<
 		oldIndex: number,
 	) => void;
 
-	columnActions?: (column: TColumn) => React.ReactNode;
-
 	children?: RenderCard<TCard>;
 }
 
@@ -175,15 +168,10 @@ export function Board<
 
 	onColumnAdded,
 	onColumnMoved,
-	onColumnNameChanged: handleChangeColumnName,
 	onCardAdded,
 	onCardMoved,
 
-	getColumnClassName,
-
 	children,
-
-	columnActions: renderColumnActions,
 
 	intl = DEFAULT_INTL,
 	...props
@@ -389,12 +377,9 @@ export function Board<
 									className={classes.list}
 								>
 									<InnerColumnList
+										{...props}
 										columns={columns}
-										getColumnClassName={getColumnClassName}
-										onChangeColumnName={handleChangeColumnName}
 										onAddCard={createCard && handleAddCard}
-										columnActions={renderColumnActions}
-										styles={props.styles}
 									>
 										{children}
 									</InnerColumnList>

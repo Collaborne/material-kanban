@@ -1,50 +1,53 @@
 import React from 'react';
-
 import { makeStyles } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import InputBase from '@material-ui/core/InputBase';
+import clsx from 'clsx';
 
 import { IntlContext } from './IntlContext';
 
-interface Props {
-	name?: string;
-	onNameChanged: (name: string) => void;
+export interface ColumnHeaderStyles {
+	columnHeaderRoot?: string;
+	columnHeaderName?: string;
+}
 
+export interface ColumnHeaderProps {
+	name?: string;
+	styles?: ColumnHeaderStyles;
+
+	/**
+	 * Render a button or similar control that provides additional per-column actions.
+	 */
 	renderActions?: () => React.ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
+	root: {
+		display: 'flex',
+		alignItems: 'center',
+		margin: theme.spacing(0, 1),
+		minHeight: theme.spacing(4),
+	},
 	name: {
-		padding: theme.spacing(0, 1),
+		flexGrow: 1,
+		paddingRight: theme.spacing(1),
 		fontWeight: 'bold',
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
 	},
 }));
 
-export const ColumnHeader = React.memo((props: Props) => {
+export const ColumnHeader = React.memo((props: ColumnHeaderProps) => {
 	const classes = useStyles();
-	const [name, setName] = React.useState(props.name ?? '');
-
-	function handleBlur() {
-		const initialName = props.name ?? '';
-		if (initialName !== name) {
-			props.onNameChanged(name);
-		}
-	}
 
 	return (
 		<IntlContext.Consumer>
 			{intl => (
-				<Box display="flex" mx={1} alignItems="center">
-					<InputBase
-						className={classes.name}
-						value={name}
-						placeholder={intl.columnNamePlaceholder}
-						fullWidth
-						onChange={e => setName(e.target.value)}
-						onBlur={handleBlur}
-					/>
-					{props.renderActions ? props.renderActions() : undefined}
-				</Box>
+				<div className={clsx(classes.root, props.styles?.columnHeaderRoot)}>
+					<div className={clsx(classes.name, props.styles?.columnHeaderName)}>
+						{props.name || intl.columnNamePlaceholder}
+					</div>
+					{props.renderActions && props.renderActions()}
+				</div>
 			)}
 		</IntlContext.Consumer>
 	);

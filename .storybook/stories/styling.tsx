@@ -36,6 +36,12 @@ const useStyles = makeStyles(theme => ({
 		textTransform: 'none',
 		padding: '1px 16px',
 	},
+	columnHeaderName: {
+		color: 'red',
+	},
+	columnHeaderRoot: {
+		background: 'lightblue',
+	},
 }));
 
 export function StylingStory() {
@@ -63,6 +69,8 @@ export function StylingStory() {
 			styles={{
 				addCardButton: classes.addCardButton,
 				addColumnButton: classes.addColumnButton,
+				columnHeaderName: classes.columnHeaderName,
+				columnHeaderRoot: classes.columnHeaderRoot,
 			}}
 		/>
 	);

@@ -8,24 +8,28 @@ import { Droppable } from 'react-beautiful-dnd';
 import * as Data from '../data';
 
 import { AddCardButton, AddCardButtonStyles } from './AddCardButton';
-import { ColumnHeader } from './ColumnHeader';
+import {
+	ColumnHeader,
+	ColumnHeaderProps,
+	ColumnHeaderStyles,
+} from './ColumnHeader';
 import { KanbanCard, RenderCard } from './KanbanCard';
 
-export interface KanbanColumnStyles extends AddCardButtonStyles {
+export interface KanbanColumnStyles
+	extends AddCardButtonStyles,
+		ColumnHeaderStyles {
 	column?: string;
 }
 
 export interface KanbanColumnProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card
-> {
+> extends ColumnHeaderProps {
 	column: TColumn;
 	isDragging: boolean;
 	index: number;
 
 	styles?: KanbanColumnStyles;
-
-	onNameChanged?: (name: string) => void;
 
 	onAddCard?: () => void;
 
@@ -34,7 +38,7 @@ export interface KanbanColumnProps<
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
 	 */
-	actions?: () => React.ReactNode;
+	renderColumnActions?: (colum: TColumn) => React.ReactNode;
 
 	/**
 	 * Allows clients to style columns
@@ -92,22 +96,13 @@ export function KanbanColumn<
 	column,
 	onAddCard: handleAddCard,
 
-	onNameChanged,
+	renderColumnActions,
 	getColumnClassName,
 
-	actions: renderActions,
 	children,
 	...props
 }: KanbanColumnProps<TColumn, TCard>) {
 	const classes = useStyles();
-
-	function handleNameChange(newName: string) {
-		column.name = newName;
-
-		if (onNameChanged) {
-			onNameChanged(newName);
-		}
-	}
 
 	return (
 		<Droppable droppableId={column.id} type="card">
@@ -123,9 +118,13 @@ export function KanbanColumn<
 					)}
 				>
 					<ColumnHeader
+						{...props}
 						name={column.name}
-						onNameChanged={handleNameChange}
-						renderActions={renderActions}
+						renderActions={
+							renderColumnActions
+								? () => renderColumnActions(column)
+								: undefined
+						}
 					/>
 
 					<List className={classes.list}>
