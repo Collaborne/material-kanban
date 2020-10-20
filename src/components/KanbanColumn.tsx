@@ -105,37 +105,44 @@ export function KanbanColumn<
 	const classes = useStyles();
 
 	return (
-		<Droppable droppableId={column.id} type="card">
-			{provided => (
-				<Paper
-					{...provided.droppableProps}
-					elevation={0}
-					innerRef={provided.innerRef}
-					className={clsx(
-						classes.paper,
-						props.styles?.column,
-						getColumnClassName ? getColumnClassName(column) : undefined,
-					)}
-				>
-					<ColumnHeader
-						{...props}
-						name={column.name}
-						renderActions={
-							renderColumnActions
-								? () => renderColumnActions(column)
-								: undefined
-						}
-					/>
-
-					<List className={classes.list}>
-						<InnerObjectsList cards={column.cards}>{children}</InnerObjectsList>
-						{provided.placeholder}
-						{handleAddCard && (
-							<AddCardButton onClick={handleAddCard} styles={props.styles} />
-						)}
-					</List>
-				</Paper>
+		<Paper
+			elevation={0}
+			className={clsx(
+				classes.paper,
+				props.styles?.column,
+				getColumnClassName ? getColumnClassName(column) : undefined,
 			)}
-		</Droppable>
+		>
+			<Droppable droppableId={column.id} type="card">
+				{provided => (
+					<>
+						<ColumnHeader
+							{...props}
+							name={column.name}
+							renderActions={
+								renderColumnActions
+									? () => renderColumnActions(column)
+									: undefined
+							}
+						/>
+
+						<List className={classes.list}>
+							<div {...provided.droppableProps} ref={provided.innerRef}>
+								<InnerObjectsList cards={column.cards}>
+									{children}
+								</InnerObjectsList>
+								{provided.placeholder}
+								{handleAddCard && (
+									<AddCardButton
+										onClick={handleAddCard}
+										styles={props.styles}
+									/>
+								)}
+							</div>
+						</List>
+					</>
+				)}
+			</Droppable>
+		</Paper>
 	);
 }
