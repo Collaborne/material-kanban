@@ -128,7 +128,7 @@ export function KanbanColumn<
 					/>
 
 					<List className={classes.list}>
-						<InnerObjectsList cards={column.cards} children={children} />
+						<InnerObjectsList cards={column.cards}>{children}</InnerObjectsList>
 						{provided.placeholder}
 						{handleAddCard && (
 							<AddCardButton onClick={handleAddCard} styles={props.styles} />
