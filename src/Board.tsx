@@ -165,10 +165,10 @@ export function Board<
 	createColumn,
 	createCard,
 
-	onColumnAdded,
-	onColumnMoved,
-	onCardAdded,
-	onCardMoved,
+	onColumnAdded: handleColumnAdded,
+	onColumnMoved: handleColumnMoved,
+	onCardAdded: handleCardAdded,
+	onCardMoved: handleCardMoved,
 
 	children,
 
@@ -231,8 +231,8 @@ export function Board<
 		}
 
 		setColumns(newColumns);
-		if (onCardMoved) {
-			onCardMoved(
+		if (handleCardMoved) {
+			handleCardMoved(
 				card,
 				newColumn,
 				newColumn.cards.findIndex(card => card.id === cardId),
@@ -272,8 +272,8 @@ export function Board<
 		newColumns.splice(index, 0, column);
 
 		setColumns(newColumns);
-		if (onColumnMoved) {
-			onColumnMoved(column, newColumns.indexOf(column), oldIndex);
+		if (handleColumnMoved) {
+			handleColumnMoved(column, newColumns.indexOf(column), oldIndex);
 		}
 	}
 
@@ -291,8 +291,8 @@ export function Board<
 		const newColumns = [...columns, newColumn];
 
 		setColumns(newColumns);
-		if (onColumnAdded) {
-			onColumnAdded(newColumn, newColumns.length - 1);
+		if (handleColumnAdded) {
+			handleColumnAdded(newColumn, newColumns.length - 1);
 		}
 	}
 
@@ -326,8 +326,8 @@ export function Board<
 		}
 
 		setColumns(newColumns);
-		if (onCardAdded) {
-			onCardAdded(newCard, column, newIndex);
+		if (handleCardAdded) {
+			handleCardAdded(newCard, column, newIndex);
 		}
 	}
 
