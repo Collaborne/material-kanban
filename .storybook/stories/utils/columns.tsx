@@ -3,8 +3,17 @@ import React, { useState } from 'react';
 import { Card, Column } from '../../../src';
 
 export const COLUMNS: Column[] = [
-	{ id: 'column1', name: 'Column 1', cards: [{ id: 'card_column1_1' }] },
-	{ id: 'column2', name: 'Column 2 with a very long name', cards: [] },
+	{
+		id: 'column1',
+		name: 'Column 1',
+		cards: [{ id: 'card_column1_1' }, { id: 'card_column1_2' }],
+	},
+	{
+		id: 'column2',
+		name: 'Column 2 with a very long name',
+		cards: [{ id: 'card_column2_1' }],
+	},
+	{ id: 'column3', name: 'Empty column', cards: [] },
 ];
 
 type Response = [

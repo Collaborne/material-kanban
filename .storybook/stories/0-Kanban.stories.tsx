@@ -13,6 +13,7 @@ import { GenericDataStory } from './generic-data';
 import { I18nStory } from './i18n';
 import { ReadOnlyStory } from './readonly';
 import { StylingStory } from './styling';
+import { ViewOnlyStory } from './viewonly';
 
 export default {
 	title: 'Kanban',
@@ -28,6 +29,11 @@ export const Basic = withDescription(
 export const Empty = withDescription('A board can be empty initially', () => (
 	<EmptyStory />
 ));
+
+export const ViewOnly = withDescription(
+	'By not providing any callbacks the board will only show the content',
+	() => <ViewOnlyStory />,
+);
 
 export const ReadOnly = withDescription(
 	'By not providing the `createColumn` and/or `createCard` parameters the board no longer allows creating columns and cards, respectively.',

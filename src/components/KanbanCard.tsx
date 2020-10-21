@@ -23,6 +23,8 @@ interface Props<TCard extends Data.Card = Data.Card> {
 	index: number;
 	className?: string;
 
+	isDragDisabled?: boolean;
+
 	children?: RenderCard<TCard>;
 }
 
@@ -60,6 +62,7 @@ function DefaultCard<TCard extends Data.Card>({
 export function KanbanCard<TCard extends Data.Card = Data.Card>({
 	card,
 	index,
+	isDragDisabled,
 	children = (card, provided) => (
 		<DefaultCard card={card} provided={provided} />
 	),
@@ -69,6 +72,7 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 			draggableId={card.id}
 			index={index}
 			disableInteractiveElementBlocking
+			isDragDisabled={isDragDisabled}
 		>
 			{(provided, snapshot) => children(card, provided, snapshot) || <div />}
 		</Draggable>

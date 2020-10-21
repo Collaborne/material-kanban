@@ -72,6 +72,9 @@ interface InnerColumnListProps<
 
 	columnActions?: (column: TColumn) => React.ReactNode;
 
+	isColumnDragDisabled?: boolean;
+	isCardDragDisabled?: boolean;
+
 	children?: RenderCard<TCard>;
 }
 
@@ -89,7 +92,12 @@ function InnerColumnList<
 	return (
 		<>
 			{columns.map((column, index) => (
-				<Draggable key={column.id} draggableId={column.id} index={index}>
+				<Draggable
+					key={column.id}
+					draggableId={column.id}
+					index={index}
+					isDragDisabled={props.isColumnDragDisabled}
+				>
 					{(draggableProvided, snapshot) => (
 						<Container
 							{...draggableProvided.draggableProps}
@@ -210,7 +218,17 @@ export function Board<
 }: BoardProps<TColumn, TCard>) {
 	const classes = useStyles();
 
+	const handlesColumnAdded = Boolean(handleChange || handleColumnAdded);
+	const handlesColumnMoved = Boolean(handleChange || handleColumnMoved);
+	const handlesCardAdded = Boolean(handleChange || handleCardAdded);
+	const handlesCardMoved = Boolean(handleChange || handleCardMoved);
+
 	function moveCard(cardId: string, columnId: string, index: number) {
+		if (!handlesCardMoved) {
+			// No point in working out the details
+			return;
+		}
+
 		// Move it in the provided data and then invoke the callback.
 		const found = columns
 			.map(column => {
@@ -272,6 +290,11 @@ export function Board<
 	}
 
 	function moveColumn(columnId: string, index: number) {
+		if (!handlesColumnMoved) {
+			// No point in working out the details
+			return;
+		}
+
 		const { newColumns, column, index: oldIndex } = columns.reduce(
 			(result, column, index) => {
 				if (column.id === columnId) {
@@ -309,6 +332,9 @@ export function Board<
 	}
 
 	async function handleAddColumn() {
+		// Adding a column involves two steps:
+		// 1. Trigger the side-effect
+		// 2. Report the change in the column contents
 		if (!createColumn) {
 			// Caller shouldn't have called this in the first place!
 			return;
@@ -316,6 +342,10 @@ export function Board<
 
 		const newColumn = await createColumn();
 		if (!newColumn) {
+			return;
+		}
+
+		if (!handlesColumnAdded) {
 			return;
 		}
 
@@ -330,13 +360,19 @@ export function Board<
 	}
 
 	async function handleAddCard(column: TColumn) {
+		// Adding a card involves two steps:
+		// 1. Trigger the side-effect
+		// 2. Report the change in the column contents
 		if (!createCard) {
-			// Caller shouldn't have called this in the first place!
 			return;
 		}
 
 		const newCard = await createCard(column);
 		if (!newCard) {
+			return;
+		}
+
+		if (!handlesCardAdded) {
 			return;
 		}
 
@@ -408,6 +444,8 @@ export function Board<
 										{...props}
 										columns={columns}
 										onAddCard={createCard && handleAddCard}
+										isColumnDragDisabled={!handlesColumnMoved}
+										isCardDragDisabled={!handlesCardMoved}
 									>
 										{children}
 									</InnerColumnList>

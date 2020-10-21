@@ -35,6 +35,8 @@ export interface KanbanColumnProps<
 
 	children?: RenderCard<TCard>;
 
+	isCardDragDisabled?: boolean;
+
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
 	 */
@@ -53,6 +55,8 @@ export interface KanbanColumnProps<
 
 interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
 	cards: TCard[];
+
+	isDragDisabled?: boolean;
 
 	children?: RenderCard<TCard>;
 }
@@ -76,12 +80,18 @@ const useStyles = makeStyles(theme => ({
 // FIXME: Bring back React.memo()
 function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 	cards,
+	isDragDisabled,
 	children,
 }: InnerObjectsListProps<TCard>) {
 	return (
 		<>
 			{cards.map((card, index) => (
-				<KanbanCard key={card.id} card={card} index={index}>
+				<KanbanCard
+					key={card.id}
+					card={card}
+					index={index}
+					isDragDisabled={isDragDisabled}
+				>
 					{children}
 				</KanbanCard>
 			))}
@@ -98,6 +108,8 @@ export function KanbanColumn<
 
 	renderColumnActions,
 	getColumnClassName,
+
+	isCardDragDisabled,
 
 	children,
 	...props
@@ -128,7 +140,10 @@ export function KanbanColumn<
 
 						<List className={classes.list}>
 							<div {...provided.droppableProps} ref={provided.innerRef}>
-								<InnerObjectsList cards={column.cards}>
+								<InnerObjectsList
+									cards={column.cards}
+									isDragDisabled={isCardDragDisabled}
+								>
 									{children}
 								</InnerObjectsList>
 								{provided.placeholder}
