@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { makeStyles, WithStyles } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';
@@ -128,7 +128,6 @@ export interface BoardProps<
 			'getColumnClassName' | 'renderColumnActions'
 		> {
 	columns: TColumn[];
-	onChange?: (newColumns: TColumn[]) => void;
 
 	intl?: Intl;
 	styles?: Styles;
@@ -137,13 +136,31 @@ export interface BoardProps<
 	createColumn?: () => Promise<TColumn | undefined>;
 	createCard?: (column: TColumn) => Promise<TCard | undefined>;
 
-	// Callbacks
-	// TODO: Review these, in particular the parameters (ids vs the things) and the return values (who modifies the arrays?)
+	/**
+	 * Update the current columns with the given new columns
+	 *
+	 * This callback will be invoked when the column order and/or content needs to be changed, and will always
+	 * be invoked before the more the specific callback. For instance, when both `onChange` and `onColumnMoved` are
+	 * provided the `onChange` callback will be invoked before the `onColumnMoved` callback.
+	 */
+	onChange?: (newColumns: TColumn[]) => void;
 
+	/**
+	 * A column was added
+	 */
 	onColumnAdded?: (column: TColumn, index: number) => void;
+	/**
+	 * A column was moved
+	 */
 	onColumnMoved?: (column: TColumn, newIndex: number, oldIndex: number) => void;
 
+	/**
+	 * A card was added
+	 */
 	onCardAdded?: (card: TCard, column: TColumn, index: number) => void;
+	/**
+	 * A column was moved
+	 */
 	onCardMoved?: (
 		card: TCard,
 		newColumn: TColumn,
@@ -155,12 +172,28 @@ export interface BoardProps<
 	children?: RenderCard<TCard>;
 }
 
+/**
+ * A basic kanban-style board
+ *
+ * This component renders the provided columns and their cards, and allows the user to manipulate the board.
+ *
+ * From a developer perspective most props are optional, and if they are not provided may disable the related
+ * functionality: If there is no `createCard` available, then the board will not allow to create cards, for example.
+ *
+ * The component provides essentially two levels of granularity for learning about the changes:
+ * * The `onChange` callback reports changes for the rendered columns, which is easy to use but may require diff-ing against
+ *   the original `columns` property to understand the change
+ * * The `on{Column,Card}{Added,Moved}` callbacks provide information on the level of individual columns and cards
+ *
+ * Note that the board doesn't provide means to delete columns or cards; these functionalities can be provided through
+ * the `renderColumnActions` callback for columns or the `children` for rendering cards, respectively.
+ */
 export function Board<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card
 >({
-	columns: initialColumns,
-	onChange,
+	columns,
+	onChange: handleChange,
 
 	createColumn,
 	createCard,
@@ -176,13 +209,7 @@ export function Board<
 	...props
 }: BoardProps<TColumn, TCard>) {
 	const classes = useStyles();
-	const [columns, setColumns] = useState(initialColumns);
 
-	// XXX: If there are no callbacks provided, how would we handle this?
-	// - Should we require them?
-	// - Should we modify the provided data, and assume the caller is fine with that and will pull it out automatically?
-	// - Should we simply ignore that there is a difference appearing between "data we had" and "data we now have"?
-	// This also relates to how react would now trigger re-rendering, as the content changes.
 	function moveCard(cardId: string, columnId: string, index: number) {
 		// Move it in the provided data and then invoke the callback.
 		const found = columns
@@ -230,7 +257,9 @@ export function Board<
 			return;
 		}
 
-		setColumns(newColumns);
+		if (handleChange) {
+			handleChange(newColumns);
+		}
 		if (handleCardMoved) {
 			handleCardMoved(
 				card,
@@ -271,7 +300,9 @@ export function Board<
 		}
 		newColumns.splice(index, 0, column);
 
-		setColumns(newColumns);
+		if (handleChange) {
+			handleChange(newColumns);
+		}
 		if (handleColumnMoved) {
 			handleColumnMoved(column, newColumns.indexOf(column), oldIndex);
 		}
@@ -290,7 +321,9 @@ export function Board<
 
 		const newColumns = [...columns, newColumn];
 
-		setColumns(newColumns);
+		if (handleChange) {
+			handleChange(newColumns);
+		}
 		if (handleColumnAdded) {
 			handleColumnAdded(newColumn, newColumns.length - 1);
 		}
@@ -325,7 +358,9 @@ export function Board<
 			return;
 		}
 
-		setColumns(newColumns);
+		if (handleChange) {
+			handleChange(newColumns);
+		}
 		if (handleCardAdded) {
 			handleCardAdded(newCard, column, newIndex);
 		}
@@ -351,12 +386,6 @@ export function Board<
 			moveColumn(draggableId, destination.index);
 		}
 	}
-
-	useEffect(() => {
-		if (onChange) {
-			onChange(columns);
-		}
-	}, [onChange, columns]);
 
 	return (
 		<div className={classes.content}>
