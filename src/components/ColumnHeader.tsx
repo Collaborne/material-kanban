@@ -23,7 +23,6 @@ const useStyles = makeStyles(theme => ({
 	root: {
 		display: 'flex',
 		alignItems: 'center',
-		margin: theme.spacing(0, 1),
 		minHeight: theme.spacing(4),
 	},
 	name: {
