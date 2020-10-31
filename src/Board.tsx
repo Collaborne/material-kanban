@@ -37,7 +37,6 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 		overflowX: 'auto',
 		overflowY: 'hidden',
-		padding: theme.spacing(0, 3, 1, 3),
 	} as CSSProperties,
 	deleteButton: {
 		marginRight: theme.spacing(1),
@@ -125,7 +124,11 @@ function InnerColumnList<
 	);
 }
 
-type Styles = AddCardButtonStyles & AddColumnButtonStyles & KanbanColumnStyles;
+type Styles = AddCardButtonStyles &
+	AddColumnButtonStyles &
+	KanbanColumnStyles & {
+		root?: string;
+	};
 
 export interface BoardProps<
 	TColumn extends Data.Column<TCard>,
@@ -424,7 +427,7 @@ export function Board<
 	}
 
 	return (
-		<div className={classes.content}>
+		<div className={clsx(classes.content, props.styles?.root)}>
 			<IntlContext.Provider value={intl}>
 				<DragDropContext onDragEnd={handleDragEnd}>
 					<Droppable
