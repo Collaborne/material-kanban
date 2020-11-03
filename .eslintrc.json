@@ -3,10 +3,13 @@
 	"extends": [
 		"standard",
 		"standard-react",
+		"plugin:promise/recommended",
+		"plugin:jsx-a11y/recommended",
+		"plugin:@typescript-eslint/recommended",
 		"plugin:prettier/recommended",
 		"prettier/standard",
 		"prettier/react",
-		"plugin:@typescript-eslint/recommended"
+		"prettier/@typescript-eslint"
 	],
 	"env": {
 		"node": true
@@ -20,10 +23,13 @@
 	},
 	"settings": {
 		"react": {
-			"version": "16"
+			"version": "17"
 		}
 	},
 	"plugins": [
+		"import",
+		"jsx-a11y",
+		"react",
 		"react-hooks"
 	],
 	"rules": {
