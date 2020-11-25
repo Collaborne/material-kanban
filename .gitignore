@@ -21,6 +21,8 @@ exposed/
 *.rej
 *.porig
 
+.eslintcache
+
 # misc
 .DS_Store
 .env

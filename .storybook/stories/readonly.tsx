@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Board } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';

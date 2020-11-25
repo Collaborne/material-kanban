@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 
 import { makeStyles, WithStyles } from '@material-ui/core/styles';
 import { CSSProperties } from '@material-ui/core/styles/withStyles';

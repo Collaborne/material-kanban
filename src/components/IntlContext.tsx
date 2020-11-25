@@ -1,4 +1,4 @@
-import React from 'react';
+import { createContext } from 'react';
 
 export interface Intl {
 	columnNamePlaceholder: string | undefined;
@@ -13,4 +13,4 @@ export const DEFAULT_INTL: Intl = {
 	columnNamePlaceholder: 'Untitled',
 };
 
-export const IntlContext = React.createContext(DEFAULT_INTL);
+export const IntlContext = createContext(DEFAULT_INTL);

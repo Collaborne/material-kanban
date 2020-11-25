@@ -1,4 +1,4 @@
-import React from 'react';
+import { createElement } from 'react';
 import { action } from '@storybook/addon-actions';
 import IconButton from '@material-ui/core/IconButton';
 import CallToAction from '@material-ui/icons/CallToAction';
@@ -17,7 +17,7 @@ export function ColumnActionsStory() {
 			<IconButton
 				onClick={() => columnActionClicked(`column ${column.id}`, { column })}
 			>
-				{React.createElement(CallToAction)}
+				{createElement(CallToAction)}
 			</IconButton>
 		);
 	}
