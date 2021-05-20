@@ -7,7 +7,7 @@ type OptionalStoryInterface<Args, ReturnType> = Annotations<
 
 export function withDescription<
 	T extends StoryFn<R> & OptionalStoryInterface<Args, R>,
-	R
+	R,
 >(storyDescription: string, story: T): T & OptionalStoryInterface<Args, R> {
 	story.parameters = {
 		...story.parameters,

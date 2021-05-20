@@ -23,7 +23,7 @@ export interface KanbanColumnStyles
 
 export interface KanbanColumnProps<
 	TColumn extends Data.Column<TCard>,
-	TCard extends Data.Card = Data.Card
+	TCard extends Data.Card = Data.Card,
 > extends ColumnHeaderProps {
 	column: TColumn;
 	isDragging: boolean;
@@ -101,7 +101,7 @@ function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 
 export function KanbanColumn<
 	TColumn extends Data.Column<TCard>,
-	TCard extends Data.Card = Data.Card
+	TCard extends Data.Card = Data.Card,
 >({
 	column,
 	onAddCard: handleAddCard,

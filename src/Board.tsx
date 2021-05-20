@@ -58,7 +58,7 @@ const useStyles = makeStyles(theme => ({
 
 interface InnerColumnListProps<
 	TColumn extends Data.Column<TCard>,
-	TCard extends Data.Card = Data.Card
+	TCard extends Data.Card = Data.Card,
 > extends Partial<WithStyles<BoardClassKey>>,
 		Pick<
 			BoardProps<TColumn, TCard>,
@@ -80,7 +80,7 @@ interface InnerColumnListProps<
 
 function InnerColumnList<
 	TColumn extends Data.Column<TCard>,
-	TCard extends Data.Card = Data.Card
+	TCard extends Data.Card = Data.Card,
 >({
 	columns,
 	onAddCard: handleAddCard,
@@ -133,7 +133,7 @@ type Styles = AddCardButtonStyles &
 
 export interface BoardProps<
 	TColumn extends Data.Column<TCard>,
-	TCard extends Data.Card = Data.Card
+	TCard extends Data.Card = Data.Card,
 > extends Partial<WithStyles<BoardClassKey>>,
 		Pick<
 			KanbanColumnProps<TColumn, TCard>,
@@ -202,7 +202,7 @@ export interface BoardProps<
  */
 export function Board<
 	TColumn extends Data.Column<TCard>,
-	TCard extends Data.Card
+	TCard extends Data.Card,
 >({
 	columns,
 	onChange: handleChange,
@@ -303,7 +303,11 @@ export function Board<
 				return;
 			}
 
-			const { newColumns, column, index: oldIndex } = columns.reduce(
+			const {
+				newColumns,
+				column,
+				index: oldIndex,
+			} = columns.reduce(
 				(result, column, index) => {
 					if (column.id === columnId) {
 						return {
