@@ -5,6 +5,7 @@ import { CSSProperties } from '@material-ui/core/styles/withStyles';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
 import clsx from 'clsx';
+import { useCallback } from 'react';
 import {
 	DragDropContext,
 	DropResult,
@@ -226,115 +227,121 @@ export function Board<
 	const handlesCardAdded = Boolean(handleChange || handleCardAdded);
 	const handlesCardMoved = Boolean(handleChange || handleCardMoved);
 
-	function moveCard(cardId: string, columnId: string, index: number) {
-		if (!handlesCardMoved) {
-			// No point in working out the details
-			return;
-		}
-
-		// Move it in the provided data and then invoke the callback.
-		const found = columns
-			.map(column => {
-				const index = column.cards.findIndex(card => card.id === cardId);
-				if (index === -1) {
-					return undefined;
-				}
-				return {
-					column,
-					index,
-				};
-			})
-			.reduce((result, entry) => result ?? entry, undefined);
-
-		if (!found) {
-			// Huuuuh? What did the user move then?
-			console.error(`Cannot find card ${cardId}`);
-			return;
-		}
-
-		const { column: oldColumn, index: oldIndex } = found;
-		const card = oldColumn.cards[oldIndex];
-
-		// Now that we have the card: update all columns.
-		let newColumn: TColumn | undefined;
-		const newColumns = columns.map(column => {
-			const newCards = column.cards.filter(card => card.id !== cardId);
-			if (column.id !== columnId) {
-				return {
-					...column,
-					cards: newCards,
-				};
+	const moveCard = useCallback(
+		(cardId: string, columnId: string, index: number) => {
+			if (!handlesCardMoved) {
+				// No point in working out the details
+				return;
 			}
 
-			newCards.splice(index, 0, card);
-			newColumn = {
-				...column,
-				cards: newCards,
-			};
-			return newColumn;
-		});
-		if (!newColumn) {
-			console.error(`Cannot find new column ${columnId}`);
-			return;
-		}
-
-		if (handleChange) {
-			handleChange(newColumns);
-		}
-		if (handleCardMoved) {
-			handleCardMoved(
-				card,
-				newColumn,
-				newColumn.cards.findIndex(card => card.id === cardId),
-				oldColumn,
-				oldIndex,
-			);
-		}
-	}
-
-	function moveColumn(columnId: string, index: number) {
-		if (!handlesColumnMoved) {
-			// No point in working out the details
-			return;
-		}
-
-		const { newColumns, column, index: oldIndex } = columns.reduce(
-			(result, column, index) => {
-				if (column.id === columnId) {
+			// Move it in the provided data and then invoke the callback.
+			const found = columns
+				.map(column => {
+					const index = column.cards.findIndex(card => card.id === cardId);
+					if (index === -1) {
+						return undefined;
+					}
 					return {
-						...result,
 						column,
 						index,
 					};
-				} else {
+				})
+				.reduce((result, entry) => result ?? entry, undefined);
+
+			if (!found) {
+				// Huuuuh? What did the user move then?
+				console.error(`Cannot find card ${cardId}`);
+				return;
+			}
+
+			const { column: oldColumn, index: oldIndex } = found;
+			const card = oldColumn.cards[oldIndex];
+
+			// Now that we have the card: update all columns.
+			let newColumn: TColumn | undefined;
+			const newColumns = columns.map(column => {
+				const newCards = column.cards.filter(card => card.id !== cardId);
+				if (column.id !== columnId) {
 					return {
-						...result,
-						newColumns: [...result.newColumns, column],
+						...column,
+						cards: newCards,
 					};
 				}
-			},
-			{
-				newColumns: [] as TColumn[],
-				column: undefined as TColumn | undefined,
-				index: -1,
-			},
-		);
-		if (!column) {
-			// Huuuuh? What did the user move then?
-			console.error(`Cannot find column ${columnId}`);
-			return;
-		}
-		newColumns.splice(index, 0, column);
 
-		if (handleChange) {
-			handleChange(newColumns);
-		}
-		if (handleColumnMoved) {
-			handleColumnMoved(column, newColumns.indexOf(column), oldIndex);
-		}
-	}
+				newCards.splice(index, 0, card);
+				newColumn = {
+					...column,
+					cards: newCards,
+				};
+				return newColumn;
+			});
+			if (!newColumn) {
+				console.error(`Cannot find new column ${columnId}`);
+				return;
+			}
 
-	async function handleAddColumn() {
+			if (handleChange) {
+				handleChange(newColumns);
+			}
+			if (handleCardMoved) {
+				handleCardMoved(
+					card,
+					newColumn,
+					newColumn.cards.findIndex(card => card.id === cardId),
+					oldColumn,
+					oldIndex,
+				);
+			}
+		},
+		[columns, handleCardMoved, handleChange, handlesCardMoved],
+	);
+
+	const moveColumn = useCallback(
+		(columnId: string, index: number) => {
+			if (!handlesColumnMoved) {
+				// No point in working out the details
+				return;
+			}
+
+			const { newColumns, column, index: oldIndex } = columns.reduce(
+				(result, column, index) => {
+					if (column.id === columnId) {
+						return {
+							...result,
+							column,
+							index,
+						};
+					} else {
+						return {
+							...result,
+							newColumns: [...result.newColumns, column],
+						};
+					}
+				},
+				{
+					newColumns: [] as TColumn[],
+					column: undefined as TColumn | undefined,
+					index: -1,
+				},
+			);
+			if (!column) {
+				// Huuuuh? What did the user move then?
+				console.error(`Cannot find column ${columnId}`);
+				return;
+			}
+			newColumns.splice(index, 0, column);
+
+			if (handleChange) {
+				handleChange(newColumns);
+			}
+			if (handleColumnMoved) {
+				handleColumnMoved(column, newColumns.indexOf(column), oldIndex);
+			}
+		},
+		[columns, handleChange, handleColumnMoved, handlesColumnMoved],
+	);
+
+	const handleAddColumn = useCallback(async () => {
 		// Adding a column involves two steps:
 		// 1. Trigger the side-effect
 		// 2. Report the change in the column contents
@@ -360,71 +367,83 @@ export function Board<
 		if (handleColumnAdded) {
 			handleColumnAdded(newColumn, newColumns.length - 1);
 		}
-	}
+	}, [
+		columns,
+		createColumn,
+		handleChange,
+		handleColumnAdded,
+		handlesColumnAdded,
+	]);
 
-	async function handleAddCard(column: TColumn) {
-		// Adding a card involves two steps:
-		// 1. Trigger the side-effect
-		// 2. Report the change in the column contents
-		if (!createCard) {
-			return;
-		}
-
-		const newCard = await createCard(column);
-		if (!newCard) {
-			return;
-		}
-
-		if (!handlesCardAdded) {
-			return;
-		}
-
-		let newIndex: number | undefined;
-		const newColumns = columns.map(existingColumn => {
-			if (existingColumn.id === column.id) {
-				const newCards = [...column.cards, newCard];
-				newIndex = newCards.length - 1;
-				return {
-					...existingColumn,
-					cards: newCards,
-				};
-			} else {
-				return existingColumn;
+	const handleAddCard = useCallback(
+		async (column: TColumn) => {
+			// Adding a card involves two steps:
+			// 1. Trigger the side-effect
+			// 2. Report the change in the column contents
+			if (!createCard) {
+				return;
 			}
-		});
-		if (typeof newIndex === 'undefined') {
-			console.log(`Cannot find column ${column.id}`);
-			return;
-		}
 
-		if (handleChange) {
-			handleChange(newColumns);
-		}
-		if (handleCardAdded) {
-			handleCardAdded(newCard, column, newIndex);
-		}
-	}
+			const newCard = await createCard(column);
+			if (!newCard) {
+				return;
+			}
 
-	function handleDragEnd(result: DropResult) {
-		const { destination, source, draggableId, type } = result;
-		if (!destination) {
-			// No drop happened, e.g. cancelled
-			return;
-		}
-		if (
-			destination.droppableId === source.droppableId &&
-			destination.index === source.index
-		) {
-			// User dropped object into original position
-			return;
-		}
+			if (!handlesCardAdded) {
+				return;
+			}
 
-		if (type === 'card') {
-			moveCard(draggableId, destination.droppableId, destination.index);
-		} else {
-			moveColumn(draggableId, destination.index);
-		}
-	}
+			let newIndex: number | undefined;
+			const newColumns = columns.map(existingColumn => {
+				if (existingColumn.id === column.id) {
+					const newCards = [...column.cards, newCard];
+					newIndex = newCards.length - 1;
+					return {
+						...existingColumn,
+						cards: newCards,
+					};
+				} else {
+					return existingColumn;
+				}
+			});
+			if (typeof newIndex === 'undefined') {
+				console.log(`Cannot find column ${column.id}`);
+				return;
+			}
+
+			if (handleChange) {
+				handleChange(newColumns);
+			}
+			if (handleCardAdded) {
+				handleCardAdded(newCard, column, newIndex);
+			}
+		},
+		[columns, createCard, handleCardAdded, handleChange, handlesCardAdded],
+	);
+
+	const handleDragEnd = useCallback(
+		(result: DropResult) => {
+			const { destination, source, draggableId, type } = result;
+			if (!destination) {
+				// No drop happened, e.g. cancelled
+				return;
+			}
+			if (
+				destination.droppableId === source.droppableId &&
+				destination.index === source.index
+			) {
+				// User dropped object into original position
+				return;
+			}
+
+			if (type === 'card') {
+				moveCard(draggableId, destination.droppableId, destination.index);
+			} else {
+				moveColumn(draggableId, destination.index);
+			}
+		},
+		[moveCard, moveColumn],
+	);
 
 	return (
 		<div className={clsx(classes.content, props.styles?.root)}>
