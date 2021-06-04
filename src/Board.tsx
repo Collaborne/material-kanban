@@ -50,10 +50,6 @@ const useStyles = makeStyles(theme => ({
 		marginRight: theme.spacing(2),
 		padding: 0,
 	} as CSSProperties,
-	addColumnButton: {
-		// Keep space for scrolling
-		paddingRight: theme.spacing(3),
-	} as CSSProperties,
 }));
 
 interface InnerColumnListProps<
