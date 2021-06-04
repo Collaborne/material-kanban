@@ -477,10 +477,7 @@ export function Board<
 									<AddColumnButton
 										onClick={handleAddColumn}
 										styles={{
-											addColumnButton: clsx(
-												classes.addColumnButton,
-												props.styles?.addColumnButton,
-											),
+											addColumnButton: props.styles?.addColumnButton ?? '',
 										}}
 									/>
 								)}
