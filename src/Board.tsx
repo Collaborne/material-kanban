@@ -58,7 +58,10 @@ interface InnerColumnListProps<
 > extends Partial<WithStyles<BoardClassKey>>,
 		Pick<
 			BoardProps<TColumn, TCard>,
-			'getColumnClassName' | 'styles' | 'renderColumnActions'
+			| 'getColumnClassName'
+			| 'styles'
+			| 'renderColumnActions'
+			| 'renderColumnName'
 		> {
 	columns: TColumn[];
 
@@ -133,7 +136,7 @@ export interface BoardProps<
 > extends Partial<WithStyles<BoardClassKey>>,
 		Pick<
 			KanbanColumnProps<TColumn, TCard>,
-			'getColumnClassName' | 'renderColumnActions'
+			'getColumnClassName' | 'renderColumnActions' | 'renderColumnName'
 		> {
 	columns: TColumn[];
 

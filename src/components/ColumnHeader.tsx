@@ -1,22 +1,31 @@
-import * as React from 'react';
+import { ReactNode, memo, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 
-import { IntlContext } from './IntlContext';
+import * as Data from '../data';
+import { Intl, IntlContext } from './IntlContext';
 
 export interface ColumnHeaderStyles {
 	columnHeaderRoot?: string;
 	columnHeaderName?: string;
 }
 
-export interface ColumnHeaderProps {
-	name?: string;
+export interface ColumnHeaderProps<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card,
+> {
+	column: TColumn;
 	styles?: ColumnHeaderStyles;
+
+	/**
+	 * Render the name of the column
+	 */
+	renderName?: (column: TColumn) => ReactNode;
 
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
 	 */
-	renderActions?: () => React.ReactNode;
+	renderActions?: () => ReactNode;
 }
 
 const useStyles = makeStyles(theme => ({
@@ -28,6 +37,8 @@ const useStyles = makeStyles(theme => ({
 	name: {
 		flexGrow: 1,
 		paddingRight: theme.spacing(1),
+	},
+	defaultNameLabel: {
 		fontWeight: 'bold',
 		whiteSpace: 'nowrap',
 		overflow: 'hidden',
@@ -35,19 +46,35 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export const ColumnHeader = React.memo((props: ColumnHeaderProps) => {
-	const classes = useStyles();
+export const ColumnHeader = memo(
+	<TColumn extends Data.Column<TCard>, TCard extends Data.Card = Data.Card>({
+		column,
+		renderName: propsRenderName,
+		...props
+	}: ColumnHeaderProps<TColumn, TCard>) => {
+		const classes = useStyles();
 
-	return (
-		<IntlContext.Consumer>
-			{intl => (
-				<div className={clsx(classes.root, props.styles?.columnHeaderRoot)}>
-					<div className={clsx(classes.name, props.styles?.columnHeaderName)}>
-						{props.name || intl.columnNamePlaceholder}
+		const renderName = useCallback(
+			(column: TColumn, intl: Intl) => {
+				if (propsRenderName) {
+					return propsRenderName(column);
+				}
+				return column.name || intl.columnNamePlaceholder;
+			},
+			[propsRenderName],
+		);
+
+		return (
+			<IntlContext.Consumer>
+				{intl => (
+					<div className={clsx(classes.root, props.styles?.columnHeaderRoot)}>
+						<div className={clsx(classes.name, props.styles?.columnHeaderName)}>
+							{renderName(column, intl)}
+						</div>
+						{props.renderActions && props.renderActions()}
 					</div>
-					{props.renderActions && props.renderActions()}
-				</div>
-			)}
-		</IntlContext.Consumer>
-	);
-});
+				)}
+			</IntlContext.Consumer>
+		);
+	},
+);

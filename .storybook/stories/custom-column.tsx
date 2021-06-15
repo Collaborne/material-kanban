@@ -32,3 +32,21 @@ export function ColumnActionsStory() {
 		/>
 	);
 }
+
+export function ColumnNameStory() {
+	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
+
+	function columnName(column: Column) {
+		return <u>{column.name}</u>;
+	}
+
+	return (
+		<Board
+			columns={columns}
+			onChange={setColumns}
+			createColumn={createColumn}
+			createCard={createCard}
+			renderColumnName={columnName}
+		/>
+	);
+}

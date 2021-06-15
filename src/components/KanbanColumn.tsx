@@ -24,7 +24,7 @@ export interface KanbanColumnStyles
 export interface KanbanColumnProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card,
-> extends ColumnHeaderProps {
+> extends ColumnHeaderProps<TColumn, TCard> {
 	column: TColumn;
 	isDragging: boolean;
 	index: number;
@@ -36,6 +36,11 @@ export interface KanbanColumnProps<
 	children?: RenderCard<TCard>;
 
 	isCardDragDisabled?: boolean;
+
+	/**
+	 * Render name of a column
+	 */
+	renderColumnName?: (colum: TColumn) => React.ReactNode;
 
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
@@ -107,6 +112,7 @@ export function KanbanColumn<
 	onAddCard: handleAddCard,
 
 	renderColumnActions,
+	renderColumnName,
 	getColumnClassName,
 
 	isCardDragDisabled,
@@ -129,8 +135,10 @@ export function KanbanColumn<
 				{provided => (
 					<>
 						<ColumnHeader
-							{...props}
-							name={column.name}
+							column={column}
+							renderName={
+								renderColumnName ? () => renderColumnName(column) : undefined
+							}
 							renderActions={
 								renderColumnActions
 									? () => renderColumnActions(column)

@@ -3,7 +3,7 @@ import { Board } from '../../src';
 import { withDescription } from '../utils';
 
 import { BasicStory } from './basic';
-import { ColumnActionsStory } from './column-actions';
+import { ColumnActionsStory, ColumnNameStory } from './custom-column';
 import { CustomCardStory } from './custom-card';
 import { EmptyStory } from './empty';
 import { ExternalChangeStory } from './external-change';
@@ -60,8 +60,13 @@ export const Styling = withDescription(
 );
 
 export const ColumnActions = withDescription(
-	'The column header can be customized',
+	'The column header (actions) can be customized',
 	() => <ColumnActionsStory />,
+);
+
+export const ColumnName = withDescription(
+	'The column header (name) can be customized',
+	() => <ColumnNameStory />,
 );
 
 export const CustomCard = withDescription(
