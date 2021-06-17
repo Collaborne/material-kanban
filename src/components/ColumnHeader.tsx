@@ -37,6 +37,7 @@ const useStyles = makeStyles(theme => ({
 	name: {
 		flexGrow: 1,
 		paddingRight: theme.spacing(1),
+		overflow: 'hidden',
 	},
 	defaultNameLabel: {
 		fontWeight: 'bold',
