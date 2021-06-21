@@ -4,9 +4,16 @@ import CardContent from '@material-ui/core/CardContent';
 
 import { Board, Card, Column } from '../../src';
 
+import { withDescription } from '../utils';
 import { COLUMNS } from './utils/columns';
 
-export function GenericDataStory() {
+export default {
+	title: 'Data / Generic Data',
+	component: Board,
+	decorators: [],
+};
+
+function GenericDataStory() {
 	interface MyCard extends Card {
 		index: number;
 	}
@@ -57,3 +64,8 @@ export function GenericDataStory() {
 		</Board>
 	);
 }
+
+export const GenericData = withDescription(
+	'The board handles generic data types and provides the correctly typed "card" in the render prop',
+	() => <GenericDataStory />,
+);

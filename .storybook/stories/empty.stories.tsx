@@ -1,8 +1,15 @@
 import { Board, Column } from '../../src';
 
+import { withDescription } from '../utils';
 import { useColumns } from './utils/columns';
 
-export function EmptyStory() {
+export default {
+	title: 'Data / Empty',
+	component: Board,
+	decorators: [],
+};
+
+function EmptyStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(
 		[] as Column[],
 	);
@@ -16,3 +23,7 @@ export function EmptyStory() {
 		/>
 	);
 }
+
+export const Empty = withDescription('A board can be empty initially', () => (
+	<EmptyStory />
+));

@@ -1,7 +1,15 @@
+import { DraggableProvided } from 'react-beautiful-dnd';
+
 import { Board, Card } from '../../src';
 
+import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
-import { DraggableProvided } from 'react-beautiful-dnd';
+
+export default {
+	title: 'Customization / Custom Card',
+	component: Board,
+	decorators: [],
+};
 
 interface AsciiArtCardProps {
 	card: Card;
@@ -22,7 +30,7 @@ function AsciiArtCard({ card, provided }: AsciiArtCardProps) {
 	);
 }
 
-export function CustomCardStory() {
+function CustomCardStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	return (
@@ -36,3 +44,8 @@ export function CustomCardStory() {
 		</Board>
 	);
 }
+
+export const CustomCard = withDescription(
+	'Card renderer can be changed',
+	() => <CustomCardStory />,
+);

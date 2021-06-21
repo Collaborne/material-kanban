@@ -2,7 +2,14 @@ import { makeStyles } from '@material-ui/core';
 
 import { Board, Column } from '../../src';
 
+import { withDescription } from '../utils';
 import { useColumns } from './utils/columns';
+
+export default {
+	title: 'Customization / Styling',
+	component: Board,
+	decorators: [],
+};
 
 interface ColoredColumn extends Column {
 	color?: string;
@@ -46,7 +53,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-export function StylingStory() {
+function StylingStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 	const classes = useStyles();
 
@@ -78,3 +85,8 @@ export function StylingStory() {
 		/>
 	);
 }
+
+export const Styling = withDescription(
+	'The columns of the board can be styled',
+	() => <StylingStory />,
+);

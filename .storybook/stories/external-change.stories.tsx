@@ -3,9 +3,16 @@ import Button from '@material-ui/core/Button';
 
 import { Board } from '../../src';
 
+import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 
-export function ExternalChangeStory() {
+export default {
+	title: 'Data / External Change',
+	component: Board,
+	decorators: [],
+};
+
+function ExternalChangeStory() {
 	const [columns, setColumns] = useColumns(COLUMNS);
 	const [lastChange, setLastChange] = useState(Date.now());
 
@@ -22,3 +29,8 @@ export function ExternalChangeStory() {
 		</>
 	);
 }
+
+export const ExternalChange = withDescription(
+	'Changing the data from the outside requires re-creating the component',
+	() => <ExternalChangeStory />,
+);

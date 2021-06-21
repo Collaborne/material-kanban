@@ -5,9 +5,16 @@ import CallToAction from '@material-ui/icons/CallToAction';
 
 import { Board, Column } from '../../src';
 
+import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 
-export function ColumnActionsStory() {
+export default {
+	title: 'Customization / Column',
+	component: Board,
+	decorators: [],
+};
+
+function ColumnActionsStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	const columnActionClicked = action('column action');
@@ -33,7 +40,12 @@ export function ColumnActionsStory() {
 	);
 }
 
-export function ColumnNameStory() {
+export const ColumnActions = withDescription(
+	'The column header (actions) can be customized',
+	() => <ColumnActionsStory />,
+);
+
+function ColumnNameStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	function columnName(column: Column) {
@@ -50,3 +62,8 @@ export function ColumnNameStory() {
 		/>
 	);
 }
+
+export const ColumnName = withDescription(
+	'The column header (name) can be customized',
+	() => <ColumnNameStory />,
+);

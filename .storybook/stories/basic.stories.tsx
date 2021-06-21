@@ -2,9 +2,16 @@ import { action } from '@storybook/addon-actions';
 
 import { Board, Card, Column } from '../../src';
 
+import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 
-export function BasicStory() {
+export default {
+	title: 'Basic',
+	component: Board,
+	decorators: [],
+};
+
+function BasicStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
 	const columnMoved = action('column moved');
@@ -40,3 +47,8 @@ export function BasicStory() {
 		/>
 	);
 }
+
+export const Basic = withDescription(
+	'The Kanban board provides columns and cards that can be dragged around',
+	() => <BasicStory />,
+);
