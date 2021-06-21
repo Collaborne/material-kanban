@@ -13,32 +13,27 @@ interface Props {
 	styles?: AddColumnButtonStyles;
 }
 
-const useStyles = makeStyles(theme => ({
-	container: {
-		marginTop: theme.spacing(1),
-	},
+const useStyles = makeStyles({
 	button: {
 		whiteSpace: 'nowrap',
 	},
-}));
+});
 
 export function AddColumnButton({ onClick, styles }: Props) {
 	const classes = useStyles();
 
 	return (
-		<div className={classes.container}>
-			<IntlContext.Consumer>
-				{intl => (
-					<Button
-						startIcon={<AddIcon />}
-						onClick={onClick}
-						color="inherit"
-						className={clsx(classes.button, styles?.addColumnButton)}
-					>
-						{intl.addColumnButtonLabel}
-					</Button>
-				)}
-			</IntlContext.Consumer>
-		</div>
+		<IntlContext.Consumer>
+			{intl => (
+				<Button
+					startIcon={<AddIcon />}
+					onClick={onClick}
+					color="inherit"
+					className={clsx(classes.button, styles?.addColumnButton)}
+				>
+					{intl.addColumnButtonLabel}
+				</Button>
+			)}
+		</IntlContext.Consumer>
 	);
 }

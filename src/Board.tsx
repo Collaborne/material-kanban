@@ -50,6 +50,9 @@ const useStyles = makeStyles(theme => ({
 		marginRight: theme.spacing(2),
 		padding: 0,
 	} as CSSProperties,
+	addButtonContainer: {
+		marginTop: theme.spacing(1),
+	},
 }));
 
 interface InnerColumnListProps<
@@ -179,6 +182,11 @@ export interface BoardProps<
 		oldColumn: TColumn,
 		oldIndex: number,
 	) => void;
+
+	/**
+	 * Custom element to add columns
+	 */
+	AddColumnButton?: JSX.Element;
 
 	children?: RenderCard<TCard>;
 }
@@ -448,6 +456,20 @@ export function Board<
 		[moveCard, moveColumn],
 	);
 
+	let addColumnButton: JSX.Element | null = null;
+	if (props.AddColumnButton) {
+		addColumnButton = props.AddColumnButton;
+	} else if (createColumn) {
+		addColumnButton = (
+			<AddColumnButton
+				onClick={handleAddColumn}
+				styles={{
+					addColumnButton: props.styles?.addColumnButton ?? '',
+				}}
+			/>
+		);
+	}
+
 	return (
 		<div className={clsx(classes.content, props.styles?.root)}>
 			<IntlContext.Provider value={intl}>
@@ -476,14 +498,9 @@ export function Board<
 									</InnerColumnList>
 								</List>
 								{provided.placeholder}
-								{createColumn && (
-									<AddColumnButton
-										onClick={handleAddColumn}
-										styles={{
-											addColumnButton: props.styles?.addColumnButton ?? '',
-										}}
-									/>
-								)}
+								<div className={classes.addButtonContainer}>
+									{addColumnButton}
+								</div>
 							</>
 						)}
 					</Droppable>
