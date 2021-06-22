@@ -186,7 +186,7 @@ export interface BoardProps<
 	/**
 	 * Custom element to add columns
 	 */
-	AddColumnButton?: JSX.Element;
+	AddColumnButton?: JSX.Element | null;
 
 	children?: RenderCard<TCard>;
 }
@@ -457,7 +457,7 @@ export function Board<
 	);
 
 	let addColumnButton: JSX.Element | null = null;
-	if (props.AddColumnButton) {
+	if (props.AddColumnButton || props.AddColumnButton === null) {
 		addColumnButton = props.AddColumnButton;
 	} else if (createColumn) {
 		addColumnButton = (
