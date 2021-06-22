@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { IntlContext } from './IntlContext';
 
 export interface AddColumnButtonStyles {
-	addColumnButton: string;
+	addColumnButton?: string;
 }
 interface Props {
 	onClick?: () => void;
