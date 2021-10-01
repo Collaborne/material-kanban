@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
 
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
 import { IntlContext } from './IntlContext';
 
@@ -19,7 +19,10 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-export function AddCardButton({ onClick, styles }: AddCardButtonProps) {
+export function AddCardButton({
+	onClick,
+	styles,
+}: AddCardButtonProps): JSX.Element {
 	const classes = useStyles();
 
 	return (
@@ -29,7 +32,7 @@ export function AddCardButton({ onClick, styles }: AddCardButtonProps) {
 					startIcon={<AddIcon />}
 					onClick={onClick}
 					className={styles?.addCardButton}
-					classes={{ label: classes.buttonLabel }}
+					classes={{ text: classes.buttonLabel }}
 					color="inherit"
 					fullWidth
 				>

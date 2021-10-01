@@ -2,11 +2,12 @@ import { Board, Column } from '../../src';
 
 import { withDescription } from '../utils';
 import { useColumns } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Data / Empty',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 function EmptyStory() {

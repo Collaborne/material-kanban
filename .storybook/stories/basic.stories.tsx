@@ -1,40 +1,44 @@
 import { action } from '@storybook/addon-actions';
+import { useCallback } from 'react';
 
 import { Board, Card, Column } from '../../src';
 
 import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Basic',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 function BasicStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
-	const columnMoved = action('column moved');
-	function handleColumnMove(
-		column: Column,
-		newIndex: number,
-		oldIndex: number,
-	) {
-		columnMoved(`${column.id} from ${oldIndex} to ${newIndex}`, { column });
-	}
-	const cardMoved = action('card moved');
-	function handleCardMove(
-		card: Card,
-		newColumn: Column,
-		newIndex: number,
-		oldColumn: Column,
-		oldIndex: number,
-	) {
-		cardMoved(
-			`${card.id} from ${oldColumn.id} position ${oldIndex} to ${newColumn.id} position ${newIndex}`,
-			{ card, oldColumn, newColumn },
-		);
-	}
+	const handleColumnMove = useCallback(
+		(column: Column, newIndex: number, oldIndex: number) => {
+			const columnMoved = action('column moved');
+			columnMoved(`${column.id} from ${oldIndex} to ${newIndex}`, { column });
+		},
+		[],
+	);
+	const handleCardMove = useCallback(
+		(
+			card: Card,
+			newColumn: Column,
+			newIndex: number,
+			oldColumn: Column,
+			oldIndex: number,
+		) => {
+			const cardMoved = action('card moved');
+			cardMoved(
+				`${card.id} from ${oldColumn.id} position ${oldIndex} to ${newColumn.id} position ${newIndex}`,
+				{ card, oldColumn, newColumn },
+			);
+		},
+		[],
+	);
 
 	return (
 		<Board

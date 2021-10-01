@@ -1,25 +1,25 @@
-import { createElement } from 'react';
+import { createElement, useCallback } from 'react';
 import { action } from '@storybook/addon-actions';
-import IconButton from '@material-ui/core/IconButton';
-import CallToAction from '@material-ui/icons/CallToAction';
+import IconButton from '@mui/material/IconButton';
+import CallToAction from '@mui/icons-material/CallToAction';
 
 import { Board, Column } from '../../src';
 
 import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / Column',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 function ColumnActionsStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
-	const columnActionClicked = action('column action');
-
-	function columnMenu(column: Column) {
+	const columnMenu = useCallback((column: Column) => {
+		const columnActionClicked = action('column action');
 		return (
 			<IconButton
 				onClick={() => columnActionClicked(`column ${column.id}`, { column })}
@@ -27,7 +27,7 @@ function ColumnActionsStory() {
 				{createElement(CallToAction)}
 			</IconButton>
 		);
-	}
+	}, []);
 
 	return (
 		<Board
@@ -48,9 +48,7 @@ export const ColumnActions = withDescription(
 function ColumnNameStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
 
-	function columnName(column: Column) {
-		return <u>{column.name}</u>;
-	}
+	const columnName = useCallback((column: Column) => <u>{column.name}</u>, []);
 
 	return (
 		<Board

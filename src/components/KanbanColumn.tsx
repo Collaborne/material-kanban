@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
+import { makeStyles } from '@mui/styles';
+import List from '@mui/material/List';
+import Paper from '@mui/material/Paper';
 import clsx from 'clsx';
 import { Droppable } from 'react-beautiful-dnd';
 
@@ -119,7 +119,7 @@ export function KanbanColumn<
 
 	children,
 	...props
-}: KanbanColumnProps<TColumn, TCard>) {
+}: KanbanColumnProps<TColumn, TCard>): JSX.Element {
 	const classes = useStyles();
 
 	return (

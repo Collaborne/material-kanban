@@ -2,11 +2,12 @@ import { Board } from '../../src';
 
 import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Read-only',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 function ReadOnlyStory() {

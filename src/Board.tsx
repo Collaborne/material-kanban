@@ -1,9 +1,8 @@
 import * as React from 'react';
 
-import { makeStyles, WithStyles } from '@material-ui/core/styles';
-import { CSSProperties } from '@material-ui/core/styles/withStyles';
-import Container from '@material-ui/core/Container';
-import List from '@material-ui/core/List';
+import { CSSProperties, makeStyles } from '@mui/styles';
+import Container from '@mui/material/Container';
+import List from '@mui/material/List';
 import clsx from 'clsx';
 import { useCallback } from 'react';
 import {
@@ -58,14 +57,10 @@ const useStyles = makeStyles(theme => ({
 interface InnerColumnListProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card,
-> extends Partial<WithStyles<BoardClassKey>>,
-		Pick<
-			BoardProps<TColumn, TCard>,
-			| 'getColumnClassName'
-			| 'styles'
-			| 'renderColumnActions'
-			| 'renderColumnName'
-		> {
+> extends Pick<
+		BoardProps<TColumn, TCard>,
+		'getColumnClassName' | 'styles' | 'renderColumnActions' | 'renderColumnName'
+	> {
 	columns: TColumn[];
 
 	onChangeColumnName?: (column: TColumn, name: string) => void;
@@ -104,7 +99,7 @@ function InnerColumnList<
 						<Container
 							{...draggableProvided.draggableProps}
 							{...draggableProvided.dragHandleProps}
-							innerRef={draggableProvided.innerRef}
+							ref={draggableProvided.innerRef}
 							className={classes.columnContainer}
 						>
 							<KanbanColumn
@@ -136,11 +131,10 @@ type Styles = AddCardButtonStyles &
 export interface BoardProps<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card,
-> extends Partial<WithStyles<BoardClassKey>>,
-		Pick<
-			KanbanColumnProps<TColumn, TCard>,
-			'getColumnClassName' | 'renderColumnActions' | 'renderColumnName'
-		> {
+> extends Pick<
+		KanbanColumnProps<TColumn, TCard>,
+		'getColumnClassName' | 'renderColumnActions' | 'renderColumnName'
+	> {
 	columns: TColumn[];
 
 	intl?: Intl;
@@ -226,7 +220,7 @@ export function Board<
 
 	intl = DEFAULT_INTL,
 	...props
-}: BoardProps<TColumn, TCard>) {
+}: BoardProps<TColumn, TCard>): JSX.Element {
 	const classes = useStyles();
 
 	const handlesColumnAdded = Boolean(handleChange || handleColumnAdded);
@@ -483,7 +477,7 @@ export function Board<
 							<>
 								<List
 									{...provided.droppableProps}
-									innerRef={provided.innerRef}
+									ref={provided.innerRef}
 									component="nav"
 									className={classes.list}
 								>

@@ -1,14 +1,15 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
 
 import { Board, Column } from '../../src';
 
 import { withDescription } from '../utils';
 import { useColumns } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / Styling',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 interface ColoredColumn extends Column {

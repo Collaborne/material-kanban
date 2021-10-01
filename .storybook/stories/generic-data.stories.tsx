@@ -1,16 +1,17 @@
-import { useState } from 'react';
-import MaterialCard from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import { useCallback, useState } from 'react';
+import MaterialCard from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 import { Board, Card, Column } from '../../src';
 
 import { withDescription } from '../utils';
 import { COLUMNS } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Data / Generic Data',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 function GenericDataStory() {
@@ -33,15 +34,15 @@ function GenericDataStory() {
 
 	const [myColumns, setMyColumns] = useState(myInitialColumns);
 
-	async function createMyColumn() {
+	const createMyColumn = useCallback(async () => {
 		const index = myColumns.length + 1;
 		return { id: `column${index}`, cards: [], index };
-	}
+	}, [myColumns.length]);
 
-	async function createMyCard(column: MyColumn) {
+	const createMyCard = useCallback(async (column: MyColumn) => {
 		const index = column.cards.length + 1;
 		return { id: `card_${column.id}_${index}`, index };
-	}
+	}, []);
 
 	return (
 		<Board

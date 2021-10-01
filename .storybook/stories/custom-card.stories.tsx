@@ -4,11 +4,12 @@ import { Board, Card } from '../../src';
 
 import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / Custom Card',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 interface AsciiArtCardProps {

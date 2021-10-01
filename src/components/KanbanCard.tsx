@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import { makeStyles } from '@mui/styles';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 import {
 	Draggable,
@@ -50,7 +50,7 @@ function DefaultCard<TCard extends Data.Card>({
 		<Card
 			{...provided.draggableProps}
 			{...provided.dragHandleProps}
-			innerRef={provided.innerRef}
+			ref={provided.innerRef}
 			className={classes.card}
 			variant="outlined"
 		>
@@ -66,7 +66,7 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 	children = (card, provided) => (
 		<DefaultCard card={card} provided={provided} />
 	),
-}: Props<TCard>) {
+}: Props<TCard>): JSX.Element {
 	return (
 		<Draggable
 			draggableId={card.id}

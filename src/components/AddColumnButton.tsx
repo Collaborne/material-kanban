@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import AddIcon from '@material-ui/icons/Add';
+import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import clsx from 'clsx';
 
 import { IntlContext } from './IntlContext';
@@ -19,7 +19,7 @@ const useStyles = makeStyles({
 	},
 });
 
-export function AddColumnButton({ onClick, styles }: Props) {
+export function AddColumnButton({ onClick, styles }: Props): JSX.Element {
 	const classes = useStyles();
 
 	return (

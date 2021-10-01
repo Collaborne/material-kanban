@@ -2,11 +2,12 @@ import { Board } from '../../src';
 
 import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
+import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / Add Column Button',
 	component: Board,
-	decorators: [],
+	decorators: [withTheme],
 };
 
 function AddColumnButtonStory() {
