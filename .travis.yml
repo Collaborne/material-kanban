@@ -13,28 +13,26 @@ before_deploy:
 - |-
   # `before_deploy` runs before each deploy provider, so if there is already a build_package_version defined don't bother working
   # through this again.
-  if [ -n "${build_package_version}" ]; then
-    exit 0
-  fi
-  # If we're not a tag build: Use `npm version` to prepare the version for deploying under a dist tag
-  if [ -n "${TRAVIS_TAG}" ]; then
-    exit 0
-  fi
-  # Build a version that properly compares as prerelease on top of the existing version. If the existing version is
-  # a pre-release already separate further components with '.', otherwise use '-'.
-  # The safe branch name is used as dist tag and as part of the version as prerelease identifier, so must follow
-  # the strict semver grammar rules.
-  safe_branch_name=$(echo "${TRAVIS_BRANCH}" | tr -d '\n' | tr -cd 'A-Za-z0-9-')
-  ts=$(date +%Y%m%d%H%M%S)
-  package_version=$(node -p 'require("./package.json").version')
-  if echo "${package_version}" | grep -- '-' >/dev/null 2>&1; then
-    prerelease_separator=.
-  else
-    prerelease_separator=-
-  fi
+  # Note that we only do this when this is a non-tagged build; for tagged builds the assumption is that the version inside
+  # `package.json` is correct.
+  if [ -z "${build_package_version}" ] && [ -z "${TRAVIS_TAG}" ]; then
+    # Build a version that properly compares as prerelease on top of the existing version. If the existing version is
+    # a pre-release already separate further components with '.', otherwise use '-'.
+    # The safe branch name is used as dist tag and as part of the version as prerelease identifier, so must follow
+    # the strict semver grammar rules.
+    safe_branch_name=$(echo "${TRAVIS_BRANCH}" | tr -d '\n' | tr -cd 'A-Za-z0-9-')
+    ts=$(date +%Y%m%d%H%M%S)
+    package_version=$(node -p 'require("./package.json").version')
+    if echo "${package_version}" | grep -- '-' >/dev/null 2>&1; then
+      prerelease_separator=.
+    else
+      prerelease_separator=-
+    fi
 
-  build_package_version=${package_version}${prerelease_separator}${safe_branch_name}.${ts}
-  npm --no-git-tag-version version ${build_package_version}
+    build_package_version=${package_version}${prerelease_separator}${safe_branch_name}.${ts}
+    echo "build_package_version calculated as ${build_package_version}" >&2
+    npm --no-git-tag-version version ${build_package_version}
+  fi
 deploy:
 - provider: npm
   email: npm@collaborne.com
