@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useCallback, ReactNode } from 'react';
 import { makeStyles } from '@mui/styles';
 import List from '@mui/material/List';
 import Paper from '@mui/material/Paper';
@@ -40,12 +40,12 @@ export interface KanbanColumnProps<
 	/**
 	 * Render name of a column
 	 */
-	renderColumnName?: (colum: TColumn) => React.ReactNode;
+	renderColumnName?: (colum: TColumn) => ReactNode;
 
 	/**
 	 * Render a button or similar control that provides additional per-column actions.
 	 */
-	renderColumnActions?: (colum: TColumn) => React.ReactNode;
+	renderColumnActions?: (colum: TColumn) => ReactNode;
 
 	/**
 	 * Allows clients to style columns
@@ -82,7 +82,6 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-// FIXME: Bring back React.memo()
 function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 	cards,
 	isDragDisabled,
@@ -122,6 +121,15 @@ export function KanbanColumn<
 }: KanbanColumnProps<TColumn, TCard>): JSX.Element {
 	const classes = useStyles();
 
+	const renderName = useCallback(
+		() => (renderColumnName ? () => renderColumnName(column) : undefined),
+		[renderColumnName, column],
+	);
+	const renderActions = useCallback(
+		() => (renderColumnActions ? () => renderColumnActions(column) : undefined),
+		[renderColumnActions, column],
+	);
+
 	return (
 		<Paper
 			elevation={0}
@@ -136,14 +144,8 @@ export function KanbanColumn<
 					<>
 						<ColumnHeader
 							column={column}
-							renderName={
-								renderColumnName ? () => renderColumnName(column) : undefined
-							}
-							renderActions={
-								renderColumnActions
-									? () => renderColumnActions(column)
-									: undefined
-							}
+							renderName={renderName}
+							renderActions={renderActions}
 						/>
 
 						<List className={classes.list}>

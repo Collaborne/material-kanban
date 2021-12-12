@@ -2,6 +2,7 @@ import { makeStyles } from '@mui/styles';
 
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import { memo, useMemo } from 'react';
 
 import { IntlContext } from './IntlContext';
 
@@ -19,26 +20,30 @@ const useStyles = makeStyles(() => ({
 	},
 }));
 
-export function AddCardButton({
-	onClick,
-	styles,
-}: AddCardButtonProps): JSX.Element {
-	const classes = useStyles();
+export const AddCardButton = memo(
+	({ onClick, styles }: AddCardButtonProps): JSX.Element => {
+		const classes = useStyles();
 
-	return (
-		<IntlContext.Consumer>
-			{intl => (
-				<Button
-					startIcon={<AddIcon />}
-					onClick={onClick}
-					className={styles?.addCardButton}
-					classes={{ text: classes.buttonLabel }}
-					color="inherit"
-					fullWidth
-				>
-					{intl.addCardButtonLabel}
-				</Button>
-			)}
-		</IntlContext.Consumer>
-	);
-}
+		const buttonClasses = useMemo(
+			() => ({ text: classes.buttonLabel }),
+			[classes],
+		);
+
+		return (
+			<IntlContext.Consumer>
+				{intl => (
+					<Button
+						startIcon={<AddIcon />}
+						onClick={onClick}
+						className={styles?.addCardButton}
+						classes={buttonClasses}
+						color="inherit"
+						fullWidth
+					>
+						{intl.addCardButtonLabel}
+					</Button>
+				)}
+			</IntlContext.Consumer>
+		);
+	},
+);

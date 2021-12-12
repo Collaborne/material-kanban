@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { memo, ReactElement, useCallback } from 'react';
 
 import { makeStyles } from '@mui/styles';
 import Card from '@mui/material/Card';
@@ -16,7 +16,7 @@ export type RenderCard<TCard extends Data.Card> = (
 	card: TCard,
 	provided: DraggableProvided,
 	snapshot: DraggableStateSnapshot,
-) => React.ReactElement<HTMLElement>;
+) => ReactElement<HTMLElement>;
 
 interface Props<TCard extends Data.Card = Data.Card> {
 	card: TCard;
@@ -59,7 +59,7 @@ function DefaultCard<TCard extends Data.Card>({
 	);
 }
 
-export function KanbanCard<TCard extends Data.Card = Data.Card>({
+function KanbanCardFunc<TCard extends Data.Card = Data.Card>({
 	card,
 	index,
 	isDragDisabled,
@@ -67,6 +67,12 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 		<DefaultCard card={card} provided={provided} />
 	),
 }: Props<TCard>): JSX.Element {
+	const renderChildren = useCallback(
+		(provided: DraggableProvided, snapshot: DraggableStateSnapshot) =>
+			children(card, provided, snapshot) || <div />,
+		[children, card],
+	);
+
 	return (
 		<Draggable
 			draggableId={card.id}
@@ -74,7 +80,10 @@ export function KanbanCard<TCard extends Data.Card = Data.Card>({
 			disableInteractiveElementBlocking
 			isDragDisabled={isDragDisabled}
 		>
-			{(provided, snapshot) => children(card, provided, snapshot) || <div />}
+			{renderChildren}
 		</Draggable>
 	);
 }
+
+const typedMemo: <T>(c: T) => T = memo;
+export const KanbanCard = typedMemo(KanbanCardFunc);

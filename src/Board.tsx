@@ -4,9 +4,10 @@ import { CSSProperties, makeStyles } from '@mui/styles';
 import Container from '@mui/material/Container';
 import List from '@mui/material/List';
 import clsx from 'clsx';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import {
 	DragDropContext,
+	DroppableProvided,
 	DropResult,
 	Droppable,
 	Draggable,
@@ -216,10 +217,16 @@ export function Board<
 	onCardAdded: handleCardAdded,
 	onCardMoved: handleCardMoved,
 
+	getColumnClassName,
+	styles,
+	renderColumnActions,
+	renderColumnName,
+
+	AddColumnButton: AddColumnButtonParam,
+
 	children,
 
 	intl = DEFAULT_INTL,
-	...props
 }: BoardProps<TColumn, TCard>): JSX.Element {
 	const classes = useStyles();
 
@@ -450,22 +457,67 @@ export function Board<
 		[moveCard, moveColumn],
 	);
 
-	let addColumnButton: JSX.Element | null = null;
-	if (props.AddColumnButton || props.AddColumnButton === null) {
-		addColumnButton = props.AddColumnButton;
-	} else if (createColumn) {
-		addColumnButton = (
-			<AddColumnButton
-				onClick={handleAddColumn}
-				styles={{
-					addColumnButton: props.styles?.addColumnButton ?? '',
-				}}
-			/>
-		);
-	}
+	const addColumnButton = useMemo(() => {
+		if (AddColumnButtonParam || AddColumnButtonParam === null) {
+			return AddColumnButtonParam;
+		}
+		if (createColumn) {
+			return (
+				<AddColumnButton
+					onClick={handleAddColumn}
+					styles={{
+						addColumnButton: styles?.addColumnButton ?? '',
+					}}
+				/>
+			);
+		}
+		return null;
+	}, [createColumn, handleAddColumn, AddColumnButtonParam, styles]);
+
+	const droppableContent = useCallback(
+		(provided: DroppableProvided) => (
+			<>
+				<List
+					{...provided.droppableProps}
+					ref={provided.innerRef}
+					component="nav"
+					className={classes.list}
+				>
+					<InnerColumnList
+						getColumnClassName={getColumnClassName}
+						styles={styles}
+						renderColumnActions={renderColumnActions}
+						renderColumnName={renderColumnName}
+						columns={columns}
+						onAddCard={createCard && handleAddCard}
+						isColumnDragDisabled={!handlesColumnMoved}
+						isCardDragDisabled={!handlesCardMoved}
+					>
+						{children}
+					</InnerColumnList>
+				</List>
+				{provided.placeholder}
+				<div className={classes.addButtonContainer}>{addColumnButton}</div>
+			</>
+		),
+		[
+			addColumnButton,
+			children,
+			classes,
+			columns,
+			createCard,
+			handleAddCard,
+			handlesCardMoved,
+			handlesColumnMoved,
+			getColumnClassName,
+			styles,
+			renderColumnActions,
+			renderColumnName,
+		],
+	);
 
 	return (
-		<div className={clsx(classes.content, props.styles?.root)}>
+		<div className={clsx(classes.content, styles?.root)}>
 			<IntlContext.Provider value={intl}>
 				<DragDropContext onDragEnd={handleDragEnd}>
 					<Droppable
@@ -473,30 +525,7 @@ export function Board<
 						type="column"
 						direction="horizontal"
 					>
-						{provided => (
-							<>
-								<List
-									{...provided.droppableProps}
-									ref={provided.innerRef}
-									component="nav"
-									className={classes.list}
-								>
-									<InnerColumnList
-										{...props}
-										columns={columns}
-										onAddCard={createCard && handleAddCard}
-										isColumnDragDisabled={!handlesColumnMoved}
-										isCardDragDisabled={!handlesCardMoved}
-									>
-										{children}
-									</InnerColumnList>
-								</List>
-								{provided.placeholder}
-								<div className={classes.addButtonContainer}>
-									{addColumnButton}
-								</div>
-							</>
-						)}
+						{droppableContent}
 					</Droppable>
 				</DragDropContext>
 			</IntlContext.Provider>

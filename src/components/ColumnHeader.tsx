@@ -51,7 +51,8 @@ export const ColumnHeader = memo(
 	<TColumn extends Data.Column<TCard>, TCard extends Data.Card = Data.Card>({
 		column,
 		renderName: propsRenderName,
-		...props
+		renderActions,
+		styles,
 	}: ColumnHeaderProps<TColumn, TCard>) => {
 		const classes = useStyles();
 
@@ -65,17 +66,18 @@ export const ColumnHeader = memo(
 			[propsRenderName],
 		);
 
-		return (
-			<IntlContext.Consumer>
-				{intl => (
-					<div className={clsx(classes.root, props.styles?.columnHeaderRoot)}>
-						<div className={clsx(classes.name, props.styles?.columnHeaderName)}>
-							{renderName(column, intl)}
-						</div>
-						{props.renderActions && props.renderActions()}
+		const renderContent = useCallback(
+			(intl: Intl) => (
+				<div className={clsx(classes.root, styles?.columnHeaderRoot)}>
+					<div className={clsx(classes.name, styles?.columnHeaderName)}>
+						{renderName(column, intl)}
 					</div>
-				)}
-			</IntlContext.Consumer>
+					{renderActions && renderActions()}
+				</div>
+			),
+			[classes, column, renderName, renderActions, styles],
 		);
+
+		return <IntlContext.Consumer>{renderContent}</IntlContext.Consumer>;
 	},
 );
