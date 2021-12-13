@@ -122,11 +122,11 @@ export function KanbanColumn<
 	const classes = useStyles();
 
 	const renderName = useCallback(
-		() => (renderColumnName ? () => renderColumnName(column) : undefined),
+		() => (renderColumnName ? renderColumnName(column) : undefined),
 		[renderColumnName, column],
 	);
 	const renderActions = useCallback(
-		() => (renderColumnActions ? () => renderColumnActions(column) : undefined),
+		() => (renderColumnActions ? renderColumnActions(column) : undefined),
 		[renderColumnActions, column],
 	);
 
