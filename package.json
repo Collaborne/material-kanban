@@ -8,6 +8,7 @@
   "main": "dist/index.js",
   "source": "src/index.tsx",
   "engines": {
+    "npm": ">=8.3.0",
     "node": ">=10"
   },
   "scripts": {
@@ -19,8 +20,8 @@
     "test:watch": "cross-env SKIP_PREFLIGHT_CHECK=true react-scripts test --env=jsdom",
     "predeploy": "run-s storybook:build",
     "deploy": "gh-pages -d storybook-static -b deploy/gh-pages",
-    "storybook": "start-storybook -p 9009",
-    "storybook:build": "build-storybook --quiet"
+    "storybook": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" start-storybook -p 9009",
+    "storybook:build": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" build-storybook --quiet"
   },
   "peerDependencies": {
     "@emotion/react": "^11.4.1",
