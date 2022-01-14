@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "tsc --noEmit false",
+    "build:watch": "npm run build -- --watch",
     "test": "run-s test:lint test:build test:unit",
     "test:build": "tsc --noEmit -p tsconfig.test.json",
     "test:lint": "eslint '*/**/*.{js,ts,tsx}'",
