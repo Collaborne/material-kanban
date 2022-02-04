@@ -6,7 +6,7 @@ export interface Card {
 /** Column data */
 export interface Column<TCard extends Card = Card> {
 	readonly id: string;
-	readonly cards: TCard[];
+	readonly cards: readonly TCard[];
 
 	/**
 	 * Name shown as header of the column.

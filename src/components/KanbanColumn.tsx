@@ -59,7 +59,7 @@ export interface KanbanColumnProps<
 }
 
 interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
-	cards: TCard[];
+	cards: readonly TCard[];
 
 	isDragDisabled?: boolean;
 
