@@ -62,7 +62,7 @@ interface InnerColumnListProps<
 		BoardProps<TColumn, TCard>,
 		'getColumnClassName' | 'styles' | 'renderColumnActions' | 'renderColumnName'
 	> {
-	columns: TColumn[];
+	columns: readonly TColumn[];
 
 	onChangeColumnName?: (column: TColumn, name: string) => void;
 
@@ -136,7 +136,7 @@ export interface BoardProps<
 		KanbanColumnProps<TColumn, TCard>,
 		'getColumnClassName' | 'renderColumnActions' | 'renderColumnName'
 	> {
-	columns: TColumn[];
+	columns: readonly TColumn[];
 
 	intl?: Intl;
 	styles?: Styles;
