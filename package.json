@@ -84,7 +84,8 @@
     "react-beautiful-dnd": "^13.0.0"
   },
   "overrides": {
-    "colors": "1.4.0"
+    "colors": "1.4.0",
+    "url-parse": "^1.5.6"
   },
   "files": [
     "dist",
