@@ -1,8 +1,7 @@
 import { useCallback, ReactNode } from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import List from '@mui/material/List';
 import Paper from '@mui/material/Paper';
-import clsx from 'clsx';
 import { Droppable } from 'react-beautiful-dnd';
 
 import * as Data from '../data';
@@ -66,7 +65,7 @@ interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
 	children?: RenderCard<TCard>;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
 	paper: {
 		width: '240px',
 		height: '100%',
@@ -118,7 +117,7 @@ export function KanbanColumn<
 	children,
 	...props
 }: KanbanColumnProps<TColumn, TCard>): JSX.Element {
-	const classes = useStyles();
+	const { classes, cx } = useStyles();
 
 	const renderName = useCallback(
 		() => (renderColumnName ? renderColumnName(column) : undefined),
@@ -132,7 +131,7 @@ export function KanbanColumn<
 	return (
 		<Paper
 			elevation={0}
-			className={clsx(
+			className={cx(
 				classes.paper,
 				props.styles?.column,
 				getColumnClassName ? getColumnClassName(column) : undefined,

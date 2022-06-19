@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -14,7 +14,7 @@ export interface AddCardButtonProps {
 	styles?: AddCardButtonStyles;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
 	buttonLabel: {
 		justifyContent: 'left',
 	},
@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
 
 export const AddCardButton = memo(
 	({ onClick, styles }: AddCardButtonProps): JSX.Element => {
-		const classes = useStyles();
+		const { classes } = useStyles();
 
 		const buttonClasses = useMemo(
 			() => ({ text: classes.buttonLabel }),

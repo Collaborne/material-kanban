@@ -1,9 +1,8 @@
 import * as React from 'react';
 
-import { CSSProperties, makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
 import List from '@mui/material/List';
-import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import {
 	DragDropContext,
@@ -31,25 +30,33 @@ import { RenderCard } from './components/KanbanCard';
 /** Styles that can be modified by a caller */
 export type BoardClassKey = never;
 
-const useStyles = makeStyles(theme => ({
+// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
+//Unexpected value type of TSAsExpression.
+// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
+//Unexpected value type of TSAsExpression.
+// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
+//Unexpected value type of TSAsExpression.
+// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
+//Unexpected value type of TSAsExpression.
+const useStyles = makeStyles()(theme => ({
 	content: {
 		display: 'flex',
 		flexDirection: 'row',
 		flexGrow: 1,
 		overflowX: 'auto',
 		overflowY: 'hidden',
-	} as CSSProperties,
+	},
 	deleteButton: {
 		marginRight: theme.spacing(1),
-	} as CSSProperties,
+	},
 	list: {
 		display: 'flex',
 		flexDirection: 'row',
-	} as CSSProperties,
+	},
 	columnContainer: {
 		marginRight: theme.spacing(2),
 		padding: 0,
-	} as CSSProperties,
+	},
 	addButtonContainer: {
 		marginTop: theme.spacing(1),
 	},
@@ -86,7 +93,7 @@ function InnerColumnList<
 	children,
 	...props
 }: InnerColumnListProps<TColumn, TCard>) {
-	const classes = useStyles();
+	const { classes } = useStyles();
 	return (
 		<>
 			{columns.map((column, index) => (
@@ -228,7 +235,7 @@ export function Board<
 
 	intl = DEFAULT_INTL,
 }: BoardProps<TColumn, TCard>): JSX.Element {
-	const classes = useStyles();
+	const { classes, cx } = useStyles();
 
 	const handlesColumnAdded = Boolean(handleChange || handleColumnAdded);
 	const handlesColumnMoved = Boolean(handleChange || handleColumnMoved);
@@ -517,7 +524,7 @@ export function Board<
 	);
 
 	return (
-		<div className={clsx(classes.content, styles?.root)}>
+		<div className={cx(classes.content, styles?.root)}>
 			<IntlContext.Provider value={intl}>
 				<DragDropContext onDragEnd={handleDragEnd}>
 					<Droppable

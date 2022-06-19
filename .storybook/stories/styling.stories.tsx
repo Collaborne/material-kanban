@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 
 import { Board, Column } from '../../src';
 
@@ -27,7 +27,7 @@ const COLUMNS: ColoredColumn[] = [
 	{ id: 'column3', name: 'No color', cards: [] },
 ];
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
 	green: {
 		background: 'lightgreen',
 	},
@@ -56,7 +56,7 @@ const useStyles = makeStyles(theme => ({
 
 function StylingStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
-	const classes = useStyles();
+	const { classes } = useStyles();
 
 	const getColumnClassName = (column: ColoredColumn) => {
 		switch (column.color) {

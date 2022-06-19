@@ -1,6 +1,6 @@
 import { memo, ReactElement, useCallback } from 'react';
 
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 
@@ -28,7 +28,7 @@ interface Props<TCard extends Data.Card = Data.Card> {
 	children?: RenderCard<TCard>;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
 	card: {
 		cursor: 'pointer!important',
 		position: 'relative',
@@ -44,7 +44,7 @@ function DefaultCard<TCard extends Data.Card>({
 	card,
 	provided,
 }: DefaultCardProps<TCard>) {
-	const classes = useStyles();
+	const { classes } = useStyles();
 
 	return (
 		<Card
