@@ -1,7 +1,6 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import clsx from 'clsx';
 import { memo } from 'react';
 
 import { IntlContext } from './IntlContext';
@@ -14,7 +13,7 @@ interface Props {
 	styles?: AddColumnButtonStyles;
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles()({
 	button: {
 		whiteSpace: 'nowrap',
 	},
@@ -22,7 +21,7 @@ const useStyles = makeStyles({
 
 export const AddColumnButton = memo(
 	({ onClick, styles }: Props): JSX.Element => {
-		const classes = useStyles();
+		const { classes, cx } = useStyles();
 
 		return (
 			<IntlContext.Consumer>
@@ -31,7 +30,7 @@ export const AddColumnButton = memo(
 						startIcon={<AddIcon />}
 						onClick={onClick}
 						color="inherit"
-						className={clsx(classes.button, styles?.addColumnButton)}
+						className={cx(classes.button, styles?.addColumnButton)}
 					>
 						{intl.addColumnButtonLabel}
 					</Button>

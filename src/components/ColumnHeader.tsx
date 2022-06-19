@@ -1,6 +1,5 @@
 import { ReactNode, memo, useCallback } from 'react';
-import { makeStyles } from '@mui/styles';
-import clsx from 'clsx';
+import { makeStyles } from 'tss-react/mui';
 
 import * as Data from '../data';
 import { Intl, IntlContext } from './IntlContext';
@@ -28,7 +27,7 @@ export interface ColumnHeaderProps<
 	renderActions?: () => ReactNode;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
 	root: {
 		display: 'flex',
 		alignItems: 'center',
@@ -54,7 +53,7 @@ export const ColumnHeader = memo(
 		renderActions,
 		styles,
 	}: ColumnHeaderProps<TColumn, TCard>) => {
-		const classes = useStyles();
+		const { classes, cx } = useStyles();
 
 		const renderName = useCallback(
 			(column: TColumn, intl: Intl) => {
@@ -68,14 +67,14 @@ export const ColumnHeader = memo(
 
 		const renderContent = useCallback(
 			(intl: Intl) => (
-				<div className={clsx(classes.root, styles?.columnHeaderRoot)}>
-					<div className={clsx(classes.name, styles?.columnHeaderName)}>
+				<div className={cx(classes.root, styles?.columnHeaderRoot)}>
+					<div className={cx(classes.name, styles?.columnHeaderName)}>
 						{renderName(column, intl)}
 					</div>
 					{renderActions && renderActions()}
 				</div>
 			),
-			[classes, column, renderName, renderActions, styles],
+			[classes, column, cx, renderName, renderActions, styles],
 		);
 
 		return <IntlContext.Consumer>{renderContent}</IntlContext.Consumer>;

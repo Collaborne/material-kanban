@@ -4,6 +4,9 @@ const path = require('path');
 const toPath = filePath => path.join(process.cwd(), filePath);
 
 module.exports = {
+	core: {
+		builder: 'webpack5',
+	},
 	stories: ['./stories/*.stories.tsx'],
 	addons: [
 		'@storybook/preset-create-react-app',
