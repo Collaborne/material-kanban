@@ -30,14 +30,6 @@ import { RenderCard } from './components/KanbanCard';
 /** Styles that can be modified by a caller */
 export type BoardClassKey = never;
 
-// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
-//Unexpected value type of TSAsExpression.
-// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
-//Unexpected value type of TSAsExpression.
-// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
-//Unexpected value type of TSAsExpression.
-// TODO jss-to-tss-react codemod: Unable to handle style definition reliably. Unsupported arrow function syntax.
-//Unexpected value type of TSAsExpression.
 const useStyles = makeStyles()(theme => ({
 	content: {
 		display: 'flex',
