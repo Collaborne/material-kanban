@@ -47,7 +47,7 @@ const useStyles = makeStyles()(theme => ({
 	},
 	columnContainer: {
 		marginRight: theme.spacing(2),
-		padding: 0,
+		padding: '0!important',
 	},
 	addButtonContainer: {
 		marginTop: theme.spacing(1),
