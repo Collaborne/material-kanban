@@ -2,7 +2,7 @@
 
 > Material styled Kanban board
 
-[Live demo](https://collaborne.github.io/material-kanban/)
+[Live demo](https://www.chromatic.com/library?appId=6364caec461898ab3dc03221)
 
 ## Install
 
