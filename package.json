@@ -1,6 +1,6 @@
 {
   "name": "@collaborne/material-kanban",
-  "version": "2.2.7",
+  "version": "2.2.8",
   "description": "Material styled Kanban board",
   "author": "Collaborne",
   "license": "MIT",
@@ -88,7 +88,7 @@
   },
   "overrides": {
     "colors": "1.4.0",
-	"typescript": "^5.1.6",
+    "typescript": "^5.1.6",
     "url-parse": "^1.5.6",
     "react-beautiful-dnd": {
       "react": "^17.0.0 || ^18.0.0",
