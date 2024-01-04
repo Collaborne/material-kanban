@@ -142,6 +142,7 @@ export function KanbanColumn<
 					<>
 						<ColumnHeader
 							column={column}
+							styles={props.styles}
 							renderName={renderName}
 							renderActions={renderActions}
 						/>
