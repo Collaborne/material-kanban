@@ -31,7 +31,6 @@ const useStyles = makeStyles()(theme => ({
 	root: {
 		display: 'flex',
 		alignItems: 'center',
-		minHeight: theme.spacing(4),
 	},
 	name: {
 		flexGrow: 1,
