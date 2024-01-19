@@ -18,6 +18,7 @@ export interface KanbanColumnStyles
 	extends AddCardButtonStyles,
 		ColumnHeaderStyles {
 	column?: string;
+	columnCards?: string;
 }
 
 export interface KanbanColumnProps<
@@ -147,7 +148,7 @@ export function KanbanColumn<
 							renderActions={renderActions}
 						/>
 
-						<List className={classes.list}>
+						<List className={cx(classes.list, props.styles?.columnCards)}>
 							<div {...provided.droppableProps} ref={provided.innerRef}>
 								<InnerObjectsList
 									cards={column.cards}
