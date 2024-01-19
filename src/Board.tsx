@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import { makeStyles } from 'tss-react/mui';
 import Container from '@mui/material/Container';
-import List from '@mui/material/List';
 import { useCallback, useMemo } from 'react';
 import {
 	DragDropContext,
@@ -476,10 +475,9 @@ export function Board<
 	const droppableContent = useCallback(
 		(provided: DroppableProvided) => (
 			<>
-				<List
+				<div
 					{...provided.droppableProps}
 					ref={provided.innerRef}
-					component="nav"
 					className={classes.list}
 				>
 					<InnerColumnList
@@ -494,7 +492,7 @@ export function Board<
 					>
 						{children}
 					</InnerColumnList>
-				</List>
+				</div>
 				{provided.placeholder}
 				<div className={classes.addButtonContainer}>{addColumnButton}</div>
 			</>
