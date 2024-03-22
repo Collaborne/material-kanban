@@ -81,6 +81,9 @@
     "react-beautiful-dnd": {
       "react": "^17.0.0 || ^18.0.0",
       "react-dom": "^17.0.0 || ^18.0.0"
+    },
+    "eslint-config-standard-react": {
+      "eslint": "^8"
     }
   },
   "files": [
