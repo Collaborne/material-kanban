@@ -14,15 +14,12 @@
   "scripts": {
     "build": "tsc --noEmit false",
     "build:watch": "npm run build -- --watch",
-    "test": "run-s test:lint test:build test:unit",
-    "test:build": "tsc --noEmit -p tsconfig.test.json",
-    "test:lint": "eslint '*/**/*.{js,ts,tsx}'",
-    "test:unit": "cross-env CI=1 SKIP_PREFLIGHT_CHECK=true react-scripts test --env=jsdom --passWithNoTests",
-    "test:watch": "cross-env SKIP_PREFLIGHT_CHECK=true react-scripts test --env=jsdom",
+    "lint": "npx eslint --report-unused-disable-directives $(node -p 'require(\"./tsconfig.test.json\").include.map(include => `'\\${include}.\\{js,ts,tsx\\}'`).join(\" \")')",
+    "test": "npm run lint",
     "predeploy": "run-s storybook:build",
     "deploy": "gh-pages -d storybook-static -b deploy/gh-pages",
-    "storybook": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" start-storybook -p 9009",
-    "storybook:build": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" build-storybook --quiet"
+    "storybook": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" storybook dev -p 9009",
+    "storybook:build": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" storybook build --quiet"
   },
   "peerDependencies": {
     "@emotion/react": "^11.10.5",
@@ -37,15 +34,10 @@
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.9",
     "@mui/material": "^5.10.11",
-    "@storybook/addon-actions": "^6.5.9",
-    "@storybook/addon-backgrounds": "^6.5.9",
-    "@storybook/addon-docs": "^6.5.9",
-    "@storybook/addon-links": "^6.5.9",
-    "@storybook/addons": "^6.5.9",
-    "@storybook/builder-webpack5": "^6.5.9",
-    "@storybook/manager-webpack5": "^6.5.9",
-    "@storybook/preset-create-react-app": "^4.1.2",
-    "@storybook/react": "^6.5.9",
+    "@storybook/addon-actions": "^8.0.4",
+    "@storybook/addon-backgrounds": "^8.0.4",
+    "@storybook/react": "^8.0.4",
+    "@storybook/react-vite": "^8.0.4",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.2.1",
@@ -55,9 +47,7 @@
     "@types/react-dom": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.29.0",
     "@typescript-eslint/parser": "^5.29.0",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.2.5",
-    "chromatic": "^6.11.4",
+    "@vitejs/plugin-react": "^4.2.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.18.0",
     "eslint-config-prettier": "^8.5.0",
@@ -78,7 +68,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
-    "react-scripts": "^5.0.1",
+    "storybook": "^8.0.4",
     "tss-react": "^4.4.0",
     "typescript": "^5.1.6"
   },
@@ -87,15 +77,9 @@
     "react-beautiful-dnd": "^13.1.0"
   },
   "overrides": {
-    "colors": "1.4.0",
-    "typescript": "^5.1.6",
-    "url-parse": "^1.5.6",
     "react-beautiful-dnd": {
       "react": "^17.0.0 || ^18.0.0",
       "react-dom": "^17.0.0 || ^18.0.0"
-    },
-    "eslint-config-standard-react": {
-      "eslint": "^8"
     }
   },
   "files": [

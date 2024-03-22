@@ -1,7 +1,8 @@
 import { createTheme, CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
+import { StoryFn } from '@storybook/react';
 
-import { StoryContext } from '@storybook/addons';
+import type { StoryContext } from '@storybook/types';
 
 const theme = createTheme({
 	components: {
@@ -17,8 +18,10 @@ const theme = createTheme({
 	},
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const withTheme = (Story: any, context: StoryContext): JSX.Element => {
+export const withTheme = (
+	Story: StoryFn,
+	context: StoryContext,
+): JSX.Element => {
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />

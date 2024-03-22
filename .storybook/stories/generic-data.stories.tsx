@@ -4,7 +4,6 @@ import CardContent from '@mui/material/CardContent';
 
 import { Board, Card, Column } from '../../src';
 
-import { withDescription } from '../utils';
 import { COLUMNS } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -66,7 +65,4 @@ function GenericDataStory() {
 	);
 }
 
-export const GenericData = withDescription(
-	'The board handles generic data types and provides the correctly typed "card" in the render prop',
-	() => <GenericDataStory />,
-);
+export const GenericData = () => <GenericDataStory />;

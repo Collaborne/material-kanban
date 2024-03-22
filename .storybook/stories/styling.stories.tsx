@@ -2,7 +2,6 @@ import { makeStyles } from 'tss-react/mui';
 
 import { Board, Column } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -87,7 +86,4 @@ function StylingStory() {
 	);
 }
 
-export const Styling = withDescription(
-	'The columns of the board can be styled',
-	() => <StylingStory />,
-);
+export const Styling = () => <StylingStory />;

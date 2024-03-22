@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 
 import { Board } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -31,7 +30,4 @@ function ExternalChangeStory() {
 	);
 }
 
-export const ExternalChange = withDescription(
-	'Changing the data from the outside requires re-creating the component',
-	() => <ExternalChangeStory />,
-);
+export const ExternalChange = () => <ExternalChangeStory />;

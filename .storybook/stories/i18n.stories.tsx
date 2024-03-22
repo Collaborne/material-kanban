@@ -1,6 +1,5 @@
 import { Board, Intl } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -29,8 +28,5 @@ function I18nStory() {
 	);
 }
 
-export const I18n = withDescription(
-	'The `intl` parameter can be used to configure the texts in the board controls',
-	() => <I18nStory />,
-);
+export const I18n = () => <I18nStory />;
 I18n.storyName = 'I18n';

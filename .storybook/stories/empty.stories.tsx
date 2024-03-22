@@ -1,6 +1,5 @@
 import { Board, Column } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -25,6 +24,4 @@ function EmptyStory() {
 	);
 }
 
-export const Empty = withDescription('A board can be empty initially', () => (
-	<EmptyStory />
-));
+export const Empty = () => <EmptyStory />;

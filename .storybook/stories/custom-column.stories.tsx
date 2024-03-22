@@ -5,7 +5,6 @@ import CallToAction from '@mui/icons-material/CallToAction';
 
 import { Board, Column } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -40,10 +39,7 @@ function ColumnActionsStory() {
 	);
 }
 
-export const ColumnActions = withDescription(
-	'The column header (actions) can be customized',
-	() => <ColumnActionsStory />,
-);
+export const ColumnActions = () => <ColumnActionsStory />;
 
 function ColumnNameStory() {
 	const [columns, setColumns, createColumn, createCard] = useColumns(COLUMNS);
@@ -61,7 +57,4 @@ function ColumnNameStory() {
 	);
 }
 
-export const ColumnName = withDescription(
-	'The column header (name) can be customized',
-	() => <ColumnNameStory />,
-);
+export const ColumnName = () => <ColumnNameStory />;

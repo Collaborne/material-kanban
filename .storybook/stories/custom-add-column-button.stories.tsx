@@ -1,6 +1,5 @@
 import { Board } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -24,7 +23,4 @@ function AddColumnButtonStory() {
 	);
 }
 
-export const AddColumnButton = withDescription(
-	'Add button can be changed',
-	() => <AddColumnButtonStory />,
-);
+export const AddColumnButton = () => <AddColumnButtonStory />;

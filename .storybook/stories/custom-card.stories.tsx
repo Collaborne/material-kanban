@@ -2,7 +2,6 @@ import { DraggableProvided } from 'react-beautiful-dnd';
 
 import { Board, Card } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -46,7 +45,4 @@ function CustomCardStory() {
 	);
 }
 
-export const CustomCard = withDescription(
-	'Card renderer can be changed',
-	() => <CustomCardStory />,
-);
+export const CustomCard = () => <CustomCardStory />;

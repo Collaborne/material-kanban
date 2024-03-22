@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 
 import { Board, Card, Column } from '../../src';
 
-import { withDescription } from '../utils';
 import { useColumns, COLUMNS } from './utils/columns';
 import { withTheme } from './utils/with-theme';
 
@@ -52,7 +51,4 @@ function BasicStory() {
 	);
 }
 
-export const Basic = withDescription(
-	'The Kanban board provides columns and cards that can be dragged around',
-	() => <BasicStory />,
-);
+export const Basic = () => <BasicStory />;
