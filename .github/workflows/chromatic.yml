@@ -10,8 +10,6 @@ jobs:
         with:
           fetch-depth: 0 # 👈 Required to retrieve git history
       - uses: actions/setup-node@v3
-        with:
-          node-version: 18
       - name: Install dependencies
         run: npm ci --unsafe-perm
       - name: Publish to Chromatic
