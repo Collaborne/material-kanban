@@ -1,7 +1,6 @@
 import { createTheme, CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { StoryFn } from '@storybook/react';
-
 import type { StoryContext } from '@storybook/types';
 
 const theme = createTheme({

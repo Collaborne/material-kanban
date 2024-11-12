@@ -1,7 +1,7 @@
-import { createElement, useCallback } from 'react';
-import { action } from '@storybook/addon-actions';
-import IconButton from '@mui/material/IconButton';
 import CallToAction from '@mui/icons-material/CallToAction';
+import IconButton from '@mui/material/IconButton';
+import { action } from '@storybook/addon-actions';
+import { createElement, useCallback } from 'react';
 
 import { Board, Column } from '../../src';
 

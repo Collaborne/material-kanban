@@ -2,6 +2,7 @@ import { ReactNode, memo, useCallback } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import * as Data from '../data';
+
 import { Intl, IntlContext } from './IntlContext';
 
 export interface ColumnHeaderStyles {

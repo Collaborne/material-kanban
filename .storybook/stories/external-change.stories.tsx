@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
 import Button from '@mui/material/Button';
+import { useCallback, useState } from 'react';
 
 import { Board } from '../../src';
 
