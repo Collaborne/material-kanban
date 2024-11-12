@@ -1,7 +1,6 @@
-import * as React from 'react';
-
-import { makeStyles } from 'tss-react/mui';
+/* eslint-disable max-lines */
 import Container from '@mui/material/Container';
+import * as React from 'react';
 import { useCallback, useMemo } from 'react';
 import {
 	DragDropContext,
@@ -10,14 +9,8 @@ import {
 	Droppable,
 	Draggable,
 } from 'react-beautiful-dnd';
+import { makeStyles } from 'tss-react/mui';
 
-import * as Data from './data';
-
-import {
-	KanbanColumn,
-	KanbanColumnProps,
-	KanbanColumnStyles,
-} from './components/KanbanColumn';
 import { AddCardButtonStyles } from './components/AddCardButton';
 import {
 	AddColumnButton,
@@ -25,6 +18,12 @@ import {
 } from './components/AddColumnButton';
 import { Intl, IntlContext, DEFAULT_INTL } from './components/IntlContext';
 import { RenderCard } from './components/KanbanCard';
+import {
+	KanbanColumn,
+	KanbanColumnProps,
+	KanbanColumnStyles,
+} from './components/KanbanColumn';
+import * as Data from './data';
 
 /** Styles that can be modified by a caller */
 export type BoardClassKey = never;

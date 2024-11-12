@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react';
 import MaterialCard from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import { useCallback, useState } from 'react';
 
 import { Board, Card, Column } from '../../src';
 

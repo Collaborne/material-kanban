@@ -1,92 +1,94 @@
 {
-  "name": "@collaborne/material-kanban",
-  "version": "2.2.14",
-  "description": "Material styled Kanban board",
-  "author": "Collaborne",
-  "license": "MIT",
-  "repository": "Collaborne/material-kanban",
-  "main": "dist/index.js",
-  "source": "src/index.tsx",
-  "engines": {
-    "npm": ">=8.3.0",
-    "node": ">=10"
-  },
-  "scripts": {
-    "build": "tsc --noEmit false",
-    "build:watch": "npm run build -- --watch",
-    "lint": "npx eslint --report-unused-disable-directives $(node -p 'require(\"./tsconfig.test.json\").include.map(include => `'\\${include}.\\{js,ts,tsx\\}'`).join(\" \")')",
-    "test": "npm run lint",
-    "predeploy": "run-s storybook:build",
-    "deploy": "gh-pages -d storybook-static -b deploy/gh-pages",
-    "storybook": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" storybook dev -p 9009",
-    "storybook:build": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" storybook build --quiet"
-  },
-  "peerDependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.11",
-    "react": "^17.0.0 || ^18.0.0",
-    "tss-react": "^4.4.0"
-  },
-  "devDependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.11",
-    "@storybook/addon-actions": "^8.0.4",
-    "@storybook/addon-backgrounds": "^8.0.4",
-    "@storybook/react": "^8.0.4",
-    "@storybook/react-vite": "^8.0.4",
-    "@testing-library/jest-dom": "6.4.2",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^14.2.1",
-    "@types/jest": "^28.1.2",
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.14",
-    "@types/react-dom": "^18.0.5",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
-    "@typescript-eslint/parser": "^5.29.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "chromatic": "^11.2.0",
-    "cross-env": "^7.0.3",
-    "eslint": "^8.18.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-jsx-a11y": "^6.5.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-promise": "^6.0.0",
-    "eslint-plugin-react": "^7.30.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-standard": "^4.1.0",
-    "gh-pages": "^4.0.0",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.7.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-is": "^18.2.0",
-    "standard": "^17.1.0",
-    "storybook": "^8.0.4",
-    "tss-react": "^4.4.0",
-    "typescript": "^5.1.6"
-  },
-  "dependencies": {
-    "@types/react-beautiful-dnd": "^13.1.2",
-    "react-beautiful-dnd": "^13.1.0"
-  },
-  "overrides": {
-    "react-beautiful-dnd": {
-      "react": "^17.0.0 || ^18.0.0",
-      "react-dom": "^17.0.0 || ^18.0.0"
-    },
-    "eslint-config-standard-react": {
-      "eslint": "^8"
-    }
-  },
-  "files": [
-    "dist",
-    "src",
-    "tsconfig.json"
-  ]
+	"name": "@collaborne/material-kanban",
+	"version": "2.2.14",
+	"description": "Material styled Kanban board",
+	"author": "Collaborne",
+	"license": "MIT",
+	"repository": "Collaborne/material-kanban",
+	"main": "dist/index.js",
+	"source": "src/index.tsx",
+	"engines": {
+		"npm": ">=8.3.0",
+		"node": ">=10"
+	},
+	"scripts": {
+		"build": "tsc --noEmit false",
+		"build:watch": "npm run build -- --watch",
+		"lint": "npx eslint --report-unused-disable-directives $(node -p 'require(\"./tsconfig.test.json\").include.map(include => `'\\${include}.\\{js,ts,tsx\\}'`).join(\" \")')",
+		"test": "npm run lint",
+		"predeploy": "run-s storybook:build",
+		"deploy": "gh-pages -d storybook-static -b deploy/gh-pages",
+		"storybook": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" storybook dev -p 9009",
+		"storybook:build": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" storybook build --quiet"
+	},
+	"peerDependencies": {
+		"@emotion/react": "^11.10.5",
+		"@emotion/styled": "^11.10.5",
+		"@mui/icons-material": "^5.10.9",
+		"@mui/material": "^5.10.11",
+		"react": "^17.0.0 || ^18.0.0",
+		"tss-react": "^4.4.0"
+	},
+	"devDependencies": {
+		"@emotion/react": "^11.10.5",
+		"@emotion/styled": "^11.10.5",
+		"@mui/icons-material": "^5.10.9",
+		"@mui/material": "^5.10.11",
+		"@storybook/addon-actions": "^8.0.4",
+		"@storybook/addon-backgrounds": "^8.0.4",
+		"@storybook/react": "^8.0.4",
+		"@storybook/react-vite": "^8.0.4",
+		"@testing-library/jest-dom": "6.4.2",
+		"@testing-library/react": "^13.3.0",
+		"@testing-library/user-event": "^14.2.1",
+		"@types/jest": "^28.1.2",
+		"@types/node": "^18.0.0",
+		"@types/react": "^18.0.14",
+		"@types/react-dom": "^18.0.5",
+		"@typescript-eslint/eslint-plugin": "^5.29.0",
+		"@typescript-eslint/parser": "^5.29.0",
+		"@vitejs/plugin-react": "^4.2.1",
+		"chromatic": "^11.2.0",
+		"cross-env": "^7.0.3",
+		"eslint": "^8.18.0",
+		"eslint-config-collaborne": "^5.4.10",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-import": "^2.29.1",
+		"eslint-plugin-jsx-a11y": "^6.5.1",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-promise": "^6.0.0",
+		"eslint-plugin-react": "^7.30.0",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-standard": "^4.1.0",
+		"eslint-plugin-storybook": "^0.11.0",
+		"gh-pages": "^4.0.0",
+		"npm-run-all": "^4.1.5",
+		"prettier": "^2.7.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-is": "^18.2.0",
+		"standard": "^17.1.0",
+		"storybook": "^8.0.4",
+		"tss-react": "^4.4.0",
+		"typescript": "^5.1.6"
+	},
+	"dependencies": {
+		"@types/react-beautiful-dnd": "^13.1.2",
+		"react-beautiful-dnd": "^13.1.0"
+	},
+	"overrides": {
+		"react-beautiful-dnd": {
+			"react": "^17.0.0 || ^18.0.0",
+			"react-dom": "^17.0.0 || ^18.0.0"
+		},
+		"eslint-config-standard-react": {
+			"eslint": "^8"
+		}
+	},
+	"files": [
+		"dist",
+		"src",
+		"tsconfig.json"
+	]
 }

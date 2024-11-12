@@ -1,14 +1,12 @@
-import { memo, ReactElement, useCallback } from 'react';
-
-import { makeStyles } from 'tss-react/mui';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-
+import { memo, ReactElement, useCallback } from 'react';
 import {
 	Draggable,
 	DraggableProvided,
 	DraggableStateSnapshot,
 } from 'react-beautiful-dnd';
+import { makeStyles } from 'tss-react/mui';
 
 import * as Data from '../data';
 
