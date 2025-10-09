@@ -1,7 +1,6 @@
 import { createTheme, CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
-import { StoryFn } from '@storybook/react';
-import type { StoryContext } from '@storybook/types';
+import { StoryContext, StoryFn } from '@storybook/react';
 
 const theme = createTheme({
 	components: {
@@ -17,10 +16,7 @@ const theme = createTheme({
 	},
 });
 
-export const withTheme = (
-	Story: StoryFn,
-	context: StoryContext,
-): JSX.Element => {
+export const withTheme = (Story: StoryFn, context: StoryContext) => {
 	return (
 		<ThemeProvider theme={theme}>
 			<CssBaseline />
