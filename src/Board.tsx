@@ -178,7 +178,7 @@ export interface BoardProps<
 	/**
 	 * Custom element to add columns
 	 */
-	AddColumnButton?: JSX.Element | null;
+	AddColumnButton?: React.ReactElement | null;
 
 	children?: RenderCard<TCard>;
 }
@@ -224,7 +224,7 @@ export function Board<
 	children,
 
 	intl = DEFAULT_INTL,
-}: BoardProps<TColumn, TCard>): JSX.Element {
+}: BoardProps<TColumn, TCard>) {
 	const { classes, cx } = useStyles();
 
 	const handlesColumnAdded = Boolean(handleChange || handleColumnAdded);

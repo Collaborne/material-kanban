@@ -117,7 +117,7 @@ export function KanbanColumn<
 
 	children,
 	...props
-}: KanbanColumnProps<TColumn, TCard>): JSX.Element {
+}: KanbanColumnProps<TColumn, TCard>) {
 	const { classes, cx } = useStyles();
 
 	const renderName = useCallback(

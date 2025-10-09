@@ -19,30 +19,28 @@ const useStyles = makeStyles()(() => ({
 	},
 }));
 
-export const AddCardButton = memo(
-	({ onClick, styles }: AddCardButtonProps): JSX.Element => {
-		const { classes } = useStyles();
+export const AddCardButton = memo(({ onClick, styles }: AddCardButtonProps) => {
+	const { classes } = useStyles();
 
-		const buttonClasses = useMemo(
-			() => ({ text: classes.buttonLabel }),
-			[classes],
-		);
+	const buttonClasses = useMemo(
+		() => ({ text: classes.buttonLabel }),
+		[classes],
+	);
 
-		return (
-			<IntlContext.Consumer>
-				{intl => (
-					<Button
-						startIcon={<AddIcon />}
-						onClick={onClick}
-						className={styles?.addCardButton}
-						classes={buttonClasses}
-						color="inherit"
-						fullWidth
-					>
-						{intl.addCardButtonLabel}
-					</Button>
-				)}
-			</IntlContext.Consumer>
-		);
-	},
-);
+	return (
+		<IntlContext.Consumer>
+			{intl => (
+				<Button
+					startIcon={<AddIcon />}
+					onClick={onClick}
+					className={styles?.addCardButton}
+					classes={buttonClasses}
+					color="inherit"
+					fullWidth
+				>
+					{intl.addCardButtonLabel}
+				</Button>
+			)}
+		</IntlContext.Consumer>
+	);
+});

@@ -19,23 +19,21 @@ const useStyles = makeStyles()({
 	},
 });
 
-export const AddColumnButton = memo(
-	({ onClick, styles }: Props): JSX.Element => {
-		const { classes, cx } = useStyles();
+export const AddColumnButton = memo(({ onClick, styles }: Props) => {
+	const { classes, cx } = useStyles();
 
-		return (
-			<IntlContext.Consumer>
-				{intl => (
-					<Button
-						startIcon={<AddIcon />}
-						onClick={onClick}
-						color="inherit"
-						className={cx(classes.button, styles?.addColumnButton)}
-					>
-						{intl.addColumnButtonLabel}
-					</Button>
-				)}
-			</IntlContext.Consumer>
-		);
-	},
-);
+	return (
+		<IntlContext.Consumer>
+			{intl => (
+				<Button
+					startIcon={<AddIcon />}
+					onClick={onClick}
+					color="inherit"
+					className={cx(classes.button, styles?.addColumnButton)}
+				>
+					{intl.addColumnButtonLabel}
+				</Button>
+			)}
+		</IntlContext.Consumer>
+	);
+});

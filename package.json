@@ -22,29 +22,29 @@
 		"storybook:build": "NODE_OPTIONS=\"${NODE_OPTIONS} --openssl-legacy-provider\" storybook build --quiet"
 	},
 	"peerDependencies": {
-		"@emotion/react": "^11.13.5",
-		"@emotion/styled": "^11.13.5",
-		"@mui/icons-material": "^6.1.8",
-		"@mui/material": "^6.1.8",
-		"react": "^17.0.0 || ^18.0.0",
-		"tss-react": "^4.4.0"
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.1",
+		"@mui/icons-material": "^7.3.4",
+		"@mui/material": "^7.3.4",
+		"react": "^18.0.0 || ^19.0.0",
+		"tss-react": "^4.9.19"
 	},
 	"devDependencies": {
-		"@emotion/react": "^11.13.5",
-		"@emotion/styled": "^11.13.5",
-		"@mui/icons-material": "^6.1.8",
-		"@mui/material": "^6.1.8",
-		"@storybook/addon-actions": "^8.0.4",
-		"@storybook/addon-backgrounds": "^8.0.4",
-		"@storybook/react": "^8.0.4",
-		"@storybook/react-vite": "^8.0.4",
+		"@emotion/react": "^11.14.0",
+		"@emotion/styled": "^11.14.1",
+		"@mui/icons-material": "^7.3.4",
+		"@mui/material": "^7.3.4",
+		"@storybook/addon-actions": "^8.6.14",
+		"@storybook/addon-backgrounds": "^8.6.14",
+		"@storybook/react": "^8.6.14",
+		"@storybook/react-vite": "^8.6.14",
 		"@testing-library/jest-dom": "6.4.2",
-		"@testing-library/react": "^13.3.0",
-		"@testing-library/user-event": "^14.2.1",
+		"@testing-library/react": "^16.3.0",
+		"@testing-library/user-event": "^14.6.1",
 		"@types/jest": "^28.1.2",
 		"@types/node": "^22.10.1",
-		"@types/react": "^18.0.14",
-		"@types/react-dom": "^18.0.5",
+		"@types/react": "^19.2.2",
+		"@types/react-dom": "^19.2.1",
 		"@typescript-eslint/eslint-plugin": "^5.29.0",
 		"@typescript-eslint/parser": "^5.29.0",
 		"@vitejs/plugin-react": "^4.2.1",
@@ -65,12 +65,12 @@
 		"gh-pages": "^4.0.0",
 		"npm-run-all": "^4.1.5",
 		"prettier": "^2.7.1",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-is": "^18.2.0",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"react-is": "^19.2.0",
 		"standard": "^17.1.0",
-		"storybook": "^8.0.4",
-		"tss-react": "^4.4.0",
+		"storybook": "^8.6.14",
+		"tss-react": "^4.9.19",
 		"typescript": "^5.7.2"
 	},
 	"dependencies": {
@@ -79,8 +79,8 @@
 	},
 	"overrides": {
 		"react-beautiful-dnd": {
-			"react": "^17.0.0 || ^18.0.0",
-			"react-dom": "^17.0.0 || ^18.0.0"
+			"react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+			"react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
 		},
 		"eslint-config-standard-react": {
 			"eslint": "^8"

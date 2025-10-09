@@ -64,7 +64,7 @@ function KanbanCardFunc<TCard extends Data.Card = Data.Card>({
 	children = (card, provided) => (
 		<DefaultCard card={card} provided={provided} />
 	),
-}: Props<TCard>): JSX.Element {
+}: Props<TCard>) {
 	const renderChildren = useCallback(
 		(provided: DraggableProvided, snapshot: DraggableStateSnapshot) =>
 			children(card, provided, snapshot) || <div />,
