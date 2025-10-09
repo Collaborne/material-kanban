@@ -6,12 +6,10 @@ import { createElement, useCallback } from 'react';
 import { Board, Column } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
-import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / Column',
 	component: Board,
-	decorators: [withTheme],
 };
 
 function ColumnActionsStory() {

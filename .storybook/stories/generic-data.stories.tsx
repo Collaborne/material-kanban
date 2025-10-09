@@ -5,12 +5,10 @@ import { useCallback, useState } from 'react';
 import { Board, Card, Column } from '../../src';
 
 import { COLUMNS } from './utils/columns';
-import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Data / Generic Data',
 	component: Board,
-	decorators: [withTheme],
 };
 
 function GenericDataStory() {

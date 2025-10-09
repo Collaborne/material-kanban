@@ -1,12 +1,10 @@
 import { Board, Intl } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
-import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / I18n',
 	component: Board,
-	decorators: [withTheme],
 };
 
 function I18nStory() {

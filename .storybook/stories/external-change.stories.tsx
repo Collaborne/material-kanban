@@ -4,12 +4,10 @@ import { useCallback, useState } from 'react';
 import { Board } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
-import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Data / External Change',
 	component: Board,
-	decorators: [withTheme],
 };
 
 function ExternalChangeStory() {

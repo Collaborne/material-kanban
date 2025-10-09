@@ -4,12 +4,10 @@ import { useCallback } from 'react';
 import { Board, Card, Column } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
-import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Basic',
 	component: Board,
-	decorators: [withTheme],
 };
 
 function BasicStory() {

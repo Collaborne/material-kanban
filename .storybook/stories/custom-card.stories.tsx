@@ -3,12 +3,10 @@ import { DraggableProvided } from 'react-beautiful-dnd';
 import { Board, Card } from '../../src';
 
 import { useColumns, COLUMNS } from './utils/columns';
-import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / Custom Card',
 	component: Board,
-	decorators: [withTheme],
 };
 
 interface AsciiArtCardProps {

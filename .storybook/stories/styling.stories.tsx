@@ -3,12 +3,10 @@ import { makeStyles } from 'tss-react/mui';
 import { Board, Column } from '../../src';
 
 import { useColumns } from './utils/columns';
-import { withTheme } from './utils/with-theme';
 
 export default {
 	title: 'Customization / Styling',
 	component: Board,
-	decorators: [withTheme],
 };
 
 interface ColoredColumn extends Column {
