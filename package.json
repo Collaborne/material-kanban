@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"repository": "Collaborne/material-kanban",
 	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"types": "dist/src/index.d.ts",
 	"source": "src/index.tsx",
 	"engines": {
 		"npm": ">=8.3.0",
