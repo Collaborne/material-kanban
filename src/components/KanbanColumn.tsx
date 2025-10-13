@@ -1,7 +1,7 @@
+import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import List from '@mui/material/List';
 import Paper from '@mui/material/Paper';
-import { useCallback, ReactNode } from 'react';
-import { Droppable } from 'react-beautiful-dnd';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import * as Data from '../data';
@@ -12,7 +12,12 @@ import {
 	ColumnHeaderProps,
 	ColumnHeaderStyles,
 } from './ColumnHeader';
-import { KanbanCard, RenderCard } from './KanbanCard';
+import {
+	CARD_DRAG_TYPE,
+	CARD_LIST_DROP_TARGET_TYPE,
+	KanbanCard,
+	RenderCard,
+} from './KanbanCard';
 
 export interface KanbanColumnStyles
 	extends AddCardButtonStyles,
@@ -37,32 +42,15 @@ export interface KanbanColumnProps<
 
 	isCardDragDisabled?: boolean;
 
-	/**
-	 * Render name of a column
-	 */
 	renderColumnName?: (colum: TColumn) => ReactNode;
-
-	/**
-	 * Render a button or similar control that provides additional per-column actions.
-	 */
 	renderColumnActions?: (colum: TColumn) => ReactNode;
-
-	/**
-	 * Allows clients to style columns
-	 *
-	 * @param colum To be styled column
-	 *
-	 * @returns Name of the CSS class that should be attached to the column. Return
-	 * 	`undefined` to keep standard styling
-	 */
 	getColumnClassName?: (colum: TColumn) => string | undefined;
 }
 
 interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
+	columnId: string;
 	cards: readonly TCard[];
-
 	isDragDisabled?: boolean;
-
 	children?: RenderCard<TCard>;
 }
 
@@ -82,6 +70,7 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 function InnerObjectsList<TCard extends Data.Card = Data.Card>({
+	columnId,
 	cards,
 	isDragDisabled,
 	children,
@@ -93,6 +82,7 @@ function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 					key={card.id}
 					card={card}
 					index={index}
+					columnId={columnId}
 					isDragDisabled={isDragDisabled}
 				>
 					{children}
@@ -108,17 +98,18 @@ export function KanbanColumn<
 >({
 	column,
 	onAddCard: handleAddCard,
-
+	isDragging: _isDragging,
 	renderColumnActions,
 	renderColumnName,
 	getColumnClassName,
-
 	isCardDragDisabled,
-
 	children,
 	...props
 }: KanbanColumnProps<TColumn, TCard>) {
 	const { classes, cx } = useStyles();
+	const [listElement, setListElement] = useState<HTMLElement | null>(null);
+
+	void _isDragging;
 
 	const renderName = useCallback(
 		() => (renderColumnName ? renderColumnName(column) : undefined),
@@ -129,6 +120,26 @@ export function KanbanColumn<
 		[renderColumnActions, column],
 	);
 
+	useEffect(() => {
+		if (!listElement) {
+			return;
+		}
+		return dropTargetForElements({
+			element: listElement,
+			canDrop: ({ source }) => Boolean(source.data.type === CARD_DRAG_TYPE),
+			getData: () => ({
+				type: CARD_LIST_DROP_TARGET_TYPE,
+				columnId: column.id,
+				index: column.cards.length,
+			}),
+			getDropEffect: () => 'move',
+		});
+	}, [column.cards.length, column.id, listElement]);
+
+	const listRef = useCallback((node: HTMLElement | null) => {
+		setListElement(node);
+	}, []);
+
 	return (
 		<Paper
 			elevation={0}
@@ -138,36 +149,28 @@ export function KanbanColumn<
 				getColumnClassName ? getColumnClassName(column) : undefined,
 			)}
 		>
-			<Droppable droppableId={column.id} type="card">
-				{provided => (
-					<>
-						<ColumnHeader
-							column={column}
-							styles={props.styles}
-							renderName={renderName}
-							renderActions={renderActions}
-						/>
+			<ColumnHeader
+				column={column}
+				styles={props.styles}
+				renderName={renderName}
+				renderActions={renderActions}
+			/>
 
-						<List className={cx(classes.list, props.styles?.columnCards)}>
-							<div {...provided.droppableProps} ref={provided.innerRef}>
-								<InnerObjectsList
-									cards={column.cards}
-									isDragDisabled={isCardDragDisabled}
-								>
-									{children}
-								</InnerObjectsList>
-								{provided.placeholder}
-								{handleAddCard && (
-									<AddCardButton
-										onClick={handleAddCard}
-										styles={props.styles}
-									/>
-								)}
-							</div>
-						</List>
-					</>
+			<List
+				className={cx(classes.list, props.styles?.columnCards)}
+				ref={listRef}
+			>
+				<InnerObjectsList
+					columnId={column.id}
+					cards={column.cards}
+					isDragDisabled={isCardDragDisabled}
+				>
+					{children}
+				</InnerObjectsList>
+				{handleAddCard && (
+					<AddCardButton onClick={handleAddCard} styles={props.styles} />
 				)}
-			</Droppable>
+			</List>
 		</Paper>
 	);
 }

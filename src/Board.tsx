@@ -1,14 +1,12 @@
 /* eslint-disable max-lines */
+import {
+	draggable,
+	dropTargetForElements,
+	monitorForElements,
+} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import Container from '@mui/material/Container';
 import * as React from 'react';
-import { useCallback, useMemo } from 'react';
-import {
-	DragDropContext,
-	DroppableProvided,
-	DropResult,
-	Droppable,
-	Draggable,
-} from 'react-beautiful-dnd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { AddCardButtonStyles } from './components/AddCardButton';
@@ -17,13 +15,96 @@ import {
 	AddColumnButtonStyles,
 } from './components/AddColumnButton';
 import { Intl, IntlContext, DEFAULT_INTL } from './components/IntlContext';
-import { RenderCard } from './components/KanbanCard';
+import {
+	CARD_DRAG_TYPE,
+	CARD_DROP_TARGET_TYPE,
+	CARD_LIST_DROP_TARGET_TYPE,
+	CardDragData,
+	CardDropTargetData,
+	CardListDropTargetData,
+	RenderCard,
+} from './components/KanbanCard';
 import {
 	KanbanColumn,
 	KanbanColumnProps,
 	KanbanColumnStyles,
 } from './components/KanbanColumn';
 import * as Data from './data';
+
+const COLUMN_DRAG_TYPE = 'column' as const;
+const COLUMN_DROP_TARGET_TYPE = 'column-position' as const;
+
+interface ColumnDragData {
+	type: typeof COLUMN_DRAG_TYPE;
+	columnId: string;
+	index: number;
+}
+
+interface ColumnDropTargetData {
+	type: typeof COLUMN_DROP_TARGET_TYPE;
+	columnId?: string;
+	index: number;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === 'object' && value !== null;
+}
+
+function isCardDragData(value: unknown): value is CardDragData {
+	if (!isRecord(value)) {
+		return false;
+	}
+	return (
+		value.type === CARD_DRAG_TYPE &&
+		typeof value.cardId === 'string' &&
+		typeof value.columnId === 'string' &&
+		typeof value.index === 'number'
+	);
+}
+
+function isColumnDragData(value: unknown): value is ColumnDragData {
+	if (!isRecord(value)) {
+		return false;
+	}
+	return (
+		value.type === COLUMN_DRAG_TYPE &&
+		typeof value.columnId === 'string' &&
+		typeof value.index === 'number'
+	);
+}
+
+function isCardDropTargetData(value: unknown): value is CardDropTargetData {
+	if (!isRecord(value)) {
+		return false;
+	}
+	return (
+		value.type === CARD_DROP_TARGET_TYPE &&
+		typeof value.columnId === 'string' &&
+		typeof value.index === 'number'
+	);
+}
+
+function isCardListDropTargetData(
+	value: unknown,
+): value is CardListDropTargetData {
+	if (!isRecord(value)) {
+		return false;
+	}
+	return (
+		value.type === CARD_LIST_DROP_TARGET_TYPE &&
+		typeof value.columnId === 'string' &&
+		typeof value.index === 'number'
+	);
+}
+
+function isColumnDropTargetData(value: unknown): value is ColumnDropTargetData {
+	if (!isRecord(value)) {
+		return false;
+	}
+	return (
+		value.type === COLUMN_DROP_TARGET_TYPE && typeof value.index === 'number'
+	);
+}
 
 /** Styles that can be modified by a caller */
 export type BoardClassKey = never;
@@ -73,6 +154,93 @@ interface InnerColumnListProps<
 	children?: RenderCard<TCard>;
 }
 
+interface ColumnItemProps<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card,
+> extends Omit<InnerColumnListProps<TColumn, TCard>, 'columns'> {
+	column: TColumn;
+	index: number;
+	className: string;
+}
+
+function ColumnItem<
+	TColumn extends Data.Column<TCard>,
+	TCard extends Data.Card = Data.Card,
+>({
+	column,
+	index,
+	className,
+	onAddCard: handleAddCard,
+	isColumnDragDisabled,
+	children,
+	...props
+}: ColumnItemProps<TColumn, TCard>) {
+	const [element, setElement] = useState<HTMLElement | null>(null);
+	const [isDragging, setIsDragging] = useState(false);
+
+	useEffect(() => {
+		if (!element) {
+			return;
+		}
+		return dropTargetForElements({
+			element,
+			canDrop: ({ source }) => {
+				return source.data?.type === COLUMN_DRAG_TYPE;
+			},
+			getData: ({ input }) => {
+				const rect = element.getBoundingClientRect();
+				const isAfter = input.clientX >= rect.left + rect.width / 2;
+				const data = {
+					type: COLUMN_DROP_TARGET_TYPE,
+					columnId: column.id,
+					index: isAfter ? index + 1 : index,
+				};
+				return data;
+			},
+			getDropEffect: () => 'move',
+		});
+	}, [column.id, element, index]);
+
+	useEffect(() => {
+		if (!element || isColumnDragDisabled) {
+			if (element) {
+				element.removeAttribute('draggable');
+			}
+			setIsDragging(false);
+			return;
+		}
+		return draggable({
+			element,
+			canDrag: () => !isColumnDragDisabled,
+			getInitialData: () => ({
+				type: COLUMN_DRAG_TYPE,
+				columnId: column.id,
+				index,
+			}),
+			onDragStart: () => {
+				setIsDragging(true);
+			},
+			onDrop: () => {
+				setIsDragging(false);
+			},
+		});
+	}, [column.id, element, index, isColumnDragDisabled]);
+
+	return (
+		<Container ref={setElement} className={className}>
+			<KanbanColumn
+				{...props}
+				isDragging={isDragging}
+				index={index}
+				column={column}
+				onAddCard={handleAddCard ? () => handleAddCard(column) : undefined}
+			>
+				{children}
+			</KanbanColumn>
+		</Container>
+	);
+}
+
 function InnerColumnList<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card = Data.Card,
@@ -87,34 +255,16 @@ function InnerColumnList<
 	return (
 		<>
 			{columns.map((column, index) => (
-				<Draggable
+				<ColumnItem
 					key={column.id}
-					draggableId={column.id}
+					className={classes.columnContainer}
+					column={column}
 					index={index}
-					isDragDisabled={props.isColumnDragDisabled}
+					onAddCard={handleAddCard}
+					{...props}
 				>
-					{(draggableProvided, snapshot) => (
-						<Container
-							{...draggableProvided.draggableProps}
-							{...draggableProvided.dragHandleProps}
-							ref={draggableProvided.innerRef}
-							className={classes.columnContainer}
-						>
-							<KanbanColumn
-								{...props}
-								isDragging={snapshot.isDragging}
-								key={column.id}
-								index={index}
-								column={column}
-								onAddCard={
-									handleAddCard ? () => handleAddCard(column) : undefined
-								}
-							>
-								{children}
-							</KanbanColumn>
-						</Container>
-					)}
-				</Draggable>
+					{children}
+				</ColumnItem>
 			))}
 		</>
 	);
@@ -226,6 +376,7 @@ export function Board<
 	intl = DEFAULT_INTL,
 }: BoardProps<TColumn, TCard>) {
 	const { classes, cx } = useStyles();
+	const [listElement, setListElement] = useState<HTMLDivElement | null>(null);
 
 	const handlesColumnAdded = Boolean(handleChange || handleColumnAdded);
 	const handlesColumnMoved = Boolean(handleChange || handleColumnMoved);
@@ -350,6 +501,107 @@ export function Board<
 		[columns, handleChange, handleColumnMoved, handlesColumnMoved],
 	);
 
+	const handleCardDrop = useCallback(
+		(source: CardDragData, dropTargets: Array<{ data: unknown }>) => {
+			const cardPositionTarget = dropTargets.find(target =>
+				isCardDropTargetData(target.data),
+			);
+			const cardListTarget = dropTargets.find(target =>
+				isCardListDropTargetData(target.data),
+			);
+			let targetData: CardDropTargetData | CardListDropTargetData | undefined;
+			if (cardPositionTarget) {
+				targetData = cardPositionTarget.data as CardDropTargetData;
+			} else if (cardListTarget) {
+				targetData = cardListTarget.data as CardListDropTargetData;
+			} else {
+				targetData = undefined;
+			}
+			if (!targetData) {
+				return;
+			}
+			let destinationIndex = targetData.index;
+			const destinationColumnId = targetData.columnId;
+			if (!destinationColumnId) {
+				return;
+			}
+			if (
+				destinationColumnId === source.columnId &&
+				destinationIndex > source.index
+			) {
+				destinationIndex -= 1;
+			}
+			if (
+				destinationColumnId === source.columnId &&
+				destinationIndex === source.index
+			) {
+				return;
+			}
+			moveCard(source.cardId, destinationColumnId, destinationIndex);
+		},
+		[moveCard],
+	);
+
+	const handleColumnDrop = useCallback(
+		(source: ColumnDragData, dropTargets: Array<{ data: unknown }>) => {
+			const columnTarget = dropTargets.find(target =>
+				isColumnDropTargetData(target.data),
+			);
+			if (!columnTarget) {
+				return;
+			}
+			const targetData = columnTarget.data as ColumnDropTargetData;
+			let destinationIndex = targetData.index;
+			const isSameColumn = targetData.columnId
+				? targetData.columnId === source.columnId
+				: true;
+			if (isSameColumn && destinationIndex > source.index) {
+				destinationIndex -= 1;
+			}
+			if (isSameColumn && destinationIndex === source.index) {
+				return;
+			}
+			if (destinationIndex < 0) {
+				return;
+			}
+			moveColumn(source.columnId, destinationIndex);
+		},
+		[moveColumn],
+	);
+
+	useEffect(() => {
+		if (!listElement) {
+			return;
+		}
+		return dropTargetForElements({
+			element: listElement,
+			canDrop: ({ source }) => isColumnDragData(source.data),
+			getData: () => ({
+				type: COLUMN_DROP_TARGET_TYPE,
+				columnId: undefined,
+				index: columns.length,
+			}),
+			getDropEffect: () => 'move',
+		});
+	}, [columns.length, listElement]);
+
+	useEffect(() => {
+		const cleanup = monitorForElements({
+			canMonitor: ({ source }) =>
+				isCardDragData(source.data) || isColumnDragData(source.data),
+			onDrop: ({ source, location }) => {
+				if (isCardDragData(source.data)) {
+					handleCardDrop(source.data, location.current.dropTargets);
+					return;
+				}
+				if (isColumnDragData(source.data)) {
+					handleColumnDrop(source.data, location.current.dropTargets);
+				}
+			},
+		});
+		return cleanup;
+	}, [handleCardDrop, handleColumnDrop]);
+
 	const handleAddColumn = useCallback(async () => {
 		// Adding a column involves two steps:
 		// 1. Trigger the side-effect
@@ -430,30 +682,6 @@ export function Board<
 		[columns, createCard, handleCardAdded, handleChange, handlesCardAdded],
 	);
 
-	const handleDragEnd = useCallback(
-		(result: DropResult) => {
-			const { destination, source, draggableId, type } = result;
-			if (!destination) {
-				// No drop happened, e.g. cancelled
-				return;
-			}
-			if (
-				destination.droppableId === source.droppableId &&
-				destination.index === source.index
-			) {
-				// User dropped object into original position
-				return;
-			}
-
-			if (type === 'card') {
-				moveCard(draggableId, destination.droppableId, destination.index);
-			} else {
-				moveColumn(draggableId, destination.index);
-			}
-		},
-		[moveCard, moveColumn],
-	);
-
 	const addColumnButton = useMemo(() => {
 		if (AddColumnButtonParam || AddColumnButtonParam === null) {
 			return AddColumnButtonParam;
@@ -471,14 +699,10 @@ export function Board<
 		return null;
 	}, [createColumn, handleAddColumn, AddColumnButtonParam, styles]);
 
-	const droppableContent = useCallback(
-		(provided: DroppableProvided) => (
-			<>
-				<div
-					{...provided.droppableProps}
-					ref={provided.innerRef}
-					className={classes.list}
-				>
+	return (
+		<div className={cx(classes.content, styles?.root)}>
+			<IntlContext.Provider value={intl}>
+				<div className={classes.list} ref={setListElement}>
 					<InnerColumnList
 						getColumnClassName={getColumnClassName}
 						styles={styles}
@@ -492,38 +716,7 @@ export function Board<
 						{children}
 					</InnerColumnList>
 				</div>
-				{provided.placeholder}
 				<div className={classes.addButtonContainer}>{addColumnButton}</div>
-			</>
-		),
-		[
-			addColumnButton,
-			children,
-			classes,
-			columns,
-			createCard,
-			handleAddCard,
-			handlesCardMoved,
-			handlesColumnMoved,
-			getColumnClassName,
-			styles,
-			renderColumnActions,
-			renderColumnName,
-		],
-	);
-
-	return (
-		<div className={cx(classes.content, styles?.root)}>
-			<IntlContext.Provider value={intl}>
-				<DragDropContext onDragEnd={handleDragEnd}>
-					<Droppable
-						droppableId="container"
-						type="column"
-						direction="horizontal"
-					>
-						{droppableContent}
-					</Droppable>
-				</DragDropContext>
 			</IntlContext.Provider>
 		</div>
 	);

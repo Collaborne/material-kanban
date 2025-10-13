@@ -1,6 +1,5 @@
-import { DraggableProvided } from 'react-beautiful-dnd';
-
 import { Board, Card } from '../../src';
+import { DraggableProvided } from '../../src/components/KanbanCard';
 
 import { useColumns, COLUMNS } from './utils/columns';
 
