@@ -6,15 +6,14 @@
 	"license": "MIT",
 	"repository": "Collaborne/material-kanban",
 	"main": "dist/index.js",
-	"types": "dist/src/index.d.ts",
 	"source": "src/index.tsx",
 	"engines": {
 		"npm": ">=8.3.0",
 		"node": ">=10"
 	},
 	"scripts": {
-		"build": "tsc --noEmit false",
-		"build:watch": "npm run build -- --watch",
+		"build": "tsc --noEmit false -p tsconfig.build.json",
+		"build:watch": "npm run build:locales && tsc-watch --noEmit false -p tsconfig.build.json --onSuccess \"yalc push --watch\"",
 		"lint": "npx eslint --report-unused-disable-directives $(node -p 'require(\"./tsconfig.test.json\").include.map(include => `'\\${include}.\\{js,ts,tsx\\}'`).join(\" \")')",
 		"test": "npm run lint",
 		"predeploy": "run-s storybook:build",
