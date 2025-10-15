@@ -5,18 +5,18 @@ on:
     tags:
       - '*'
 
+permissions:
+  id-token: write  # Required for npm public (OIDC)
+  contents: read
+
 jobs:
   publish-npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - name: Authenticate with private NPM package
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: npm ci --unsafe-perm
       - run: npm run build
       - run: npm test
       - name: Publish to NPM
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
