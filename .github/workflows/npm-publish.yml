@@ -6,7 +6,7 @@ on:
       - '*'
 
 permissions:
-  id-token: write # Required for npmjs (OIDC)
+  id-token: write # Required for npmjs publish (OIDC)
   contents: read
 
 jobs:
@@ -18,5 +18,5 @@ jobs:
       - run: npm ci --unsafe-perm
       - run: npm run build
       - run: npm test
-      # Required by npmjs
+      # npmjs requires more recent npm version than Github Action runs by default
       - run: npx -y npm@^11.5.1 publish
