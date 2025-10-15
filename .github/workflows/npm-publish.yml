@@ -6,7 +6,7 @@ on:
       - '*'
 
 permissions:
-  id-token: write  # Required for npm public (OIDC)
+  id-token: write # Required for npmjs (OIDC)
   contents: read
 
 jobs:
@@ -15,11 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      # Ensure npm 11.5.1 or later is installed
-      - name: Update npm
-        run: npm install -g npm@latest
       - run: npm ci --unsafe-perm
       - run: npm run build
       - run: npm test
-      - name: Publish to NPM
-        run: npm publish
+	  # Required by npmjs
+      - run: npx -y npm@^11.5.1 publish
