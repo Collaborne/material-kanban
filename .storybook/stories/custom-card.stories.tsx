@@ -1,5 +1,5 @@
 import { Board, Card } from '../../src';
-import { DraggableProvided } from '../../src/components/KanbanCard';
+import { DraggableProvided } from '../../src/hooks/useCardDragAndDrop';
 
 import { useColumns, COLUMNS } from './utils/columns';
 

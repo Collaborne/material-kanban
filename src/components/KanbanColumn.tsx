@@ -1,10 +1,14 @@
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import List from '@mui/material/List';
 import Paper from '@mui/material/Paper';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import * as Data from '../data';
+import {
+	CARD_DRAG_TYPE,
+	CARD_LIST_DROP_TARGET_TYPE,
+} from '../drag-and-drop/card';
 
 import { AddCardButton, AddCardButtonStyles } from './AddCardButton';
 import {
@@ -12,12 +16,7 @@ import {
 	ColumnHeaderProps,
 	ColumnHeaderStyles,
 } from './ColumnHeader';
-import {
-	CARD_DRAG_TYPE,
-	CARD_LIST_DROP_TARGET_TYPE,
-	KanbanCard,
-	RenderCard,
-} from './KanbanCard';
+import { KanbanCard, RenderCard } from './KanbanCard';
 
 export interface KanbanColumnStyles
 	extends AddCardButtonStyles,
@@ -42,6 +41,8 @@ export interface KanbanColumnProps<
 
 	isCardDragDisabled?: boolean;
 
+	cardDropIndicatorIndex?: number | null;
+
 	renderColumnName?: (colum: TColumn) => ReactNode;
 	renderColumnActions?: (colum: TColumn) => ReactNode;
 	getColumnClassName?: (colum: TColumn) => string | undefined;
@@ -51,6 +52,7 @@ interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
 	columnId: string;
 	cards: readonly TCard[];
 	isDragDisabled?: boolean;
+	dropIndicatorIndex?: number | null;
 	children?: RenderCard<TCard>;
 }
 
@@ -67,27 +69,53 @@ const useStyles = makeStyles()(theme => ({
 		flexGrow: 1,
 		padding: theme.spacing(0.5, 1 / 8, 1, 1 / 8),
 	},
+	cardDropIndicator: {
+		borderRadius: theme.shape.borderRadius,
+		height: theme.spacing(0.25),
+		margin: theme.spacing(0.5, 1 / 8),
+		pointerEvents: 'none',
+	},
+	visibleIndicator: {
+		backgroundColor: theme.palette.primary.main,
+	},
 }));
+
+function DropZoneIndicator(props: { visible: boolean }) {
+	const { classes, cx } = useStyles();
+
+	return (
+		<div
+			aria-hidden="true"
+			className={cx(classes.cardDropIndicator, {
+				[classes.visibleIndicator]: props.visible,
+			})}
+		/>
+	);
+}
 
 function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 	columnId,
 	cards,
 	isDragDisabled,
+	dropIndicatorIndex,
 	children,
 }: InnerObjectsListProps<TCard>) {
 	return (
 		<>
 			{cards.map((card, index) => (
-				<KanbanCard
-					key={card.id}
-					card={card}
-					index={index}
-					columnId={columnId}
-					isDragDisabled={isDragDisabled}
-				>
-					{children}
-				</KanbanCard>
+				<Fragment key={card.id}>
+					<DropZoneIndicator visible={dropIndicatorIndex === index} />
+					<KanbanCard
+						card={card}
+						index={index}
+						columnId={columnId}
+						isDragDisabled={isDragDisabled}
+					>
+						{children}
+					</KanbanCard>
+				</Fragment>
 			))}
+			<DropZoneIndicator visible={dropIndicatorIndex === cards.length} />
 		</>
 	);
 }
@@ -103,6 +131,7 @@ export function KanbanColumn<
 	renderColumnName,
 	getColumnClassName,
 	isCardDragDisabled,
+	cardDropIndicatorIndex,
 	children,
 	...props
 }: KanbanColumnProps<TColumn, TCard>) {
@@ -164,6 +193,7 @@ export function KanbanColumn<
 					columnId={column.id}
 					cards={column.cards}
 					isDragDisabled={isCardDragDisabled}
+					dropIndicatorIndex={cardDropIndicatorIndex ?? undefined}
 				>
 					{children}
 				</InnerObjectsList>
