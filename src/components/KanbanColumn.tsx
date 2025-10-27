@@ -5,6 +5,10 @@ import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import * as Data from '../data';
+import {
+	CARD_DRAG_TYPE,
+	CARD_LIST_DROP_TARGET_TYPE,
+} from '../drag-and-drop/card';
 
 import { AddCardButton, AddCardButtonStyles } from './AddCardButton';
 import {
@@ -12,12 +16,7 @@ import {
 	ColumnHeaderProps,
 	ColumnHeaderStyles,
 } from './ColumnHeader';
-import {
-	CARD_DRAG_TYPE,
-	CARD_LIST_DROP_TARGET_TYPE,
-	KanbanCard,
-	RenderCard,
-} from './KanbanCard';
+import { KanbanCard, RenderCard } from './KanbanCard';
 
 export interface KanbanColumnStyles
 	extends AddCardButtonStyles,

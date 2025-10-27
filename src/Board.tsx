@@ -1,12 +1,7 @@
 /* eslint-disable max-lines */
-import {
-	draggable,
-	dropTargetForElements,
-	monitorForElements,
-} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import Container from '@mui/material/Container';
 import * as React from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import { AddCardButtonStyles } from './components/AddCardButton';
@@ -15,98 +10,18 @@ import {
 	AddColumnButtonStyles,
 } from './components/AddColumnButton';
 import { Intl, IntlContext, DEFAULT_INTL } from './components/IntlContext';
-import {
-	CARD_DRAG_TYPE,
-	CARD_DROP_TARGET_TYPE,
-	CARD_LIST_DROP_TARGET_TYPE,
-	CardDragData,
-	CardDropTargetData,
-	CardListDropTargetData,
-	RenderCard,
-} from './components/KanbanCard';
+import { RenderCard } from './components/KanbanCard';
 import {
 	KanbanColumn,
 	KanbanColumnProps,
 	KanbanColumnStyles,
 } from './components/KanbanColumn';
 import * as Data from './data';
-
-const COLUMN_DRAG_TYPE = 'column' as const;
-const COLUMN_DROP_TARGET_TYPE = 'column-position' as const;
-
-interface ColumnDragData {
-	type: typeof COLUMN_DRAG_TYPE;
-	columnId: string;
-	index: number;
-}
-
-interface ColumnDropTargetData {
-	type: typeof COLUMN_DROP_TARGET_TYPE;
-	columnId?: string;
-	index: number;
-}
-
-type CardDropIndicator = Pick<CardDropTargetData, 'columnId' | 'index'>;
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-	return typeof value === 'object' && value !== null;
-}
-
-function isCardDragData(value: unknown): value is CardDragData {
-	if (!isRecord(value)) {
-		return false;
-	}
-	return (
-		value.type === CARD_DRAG_TYPE &&
-		typeof value.cardId === 'string' &&
-		typeof value.columnId === 'string' &&
-		typeof value.index === 'number'
-	);
-}
-
-function isColumnDragData(value: unknown): value is ColumnDragData {
-	if (!isRecord(value)) {
-		return false;
-	}
-	return (
-		value.type === COLUMN_DRAG_TYPE &&
-		typeof value.columnId === 'string' &&
-		typeof value.index === 'number'
-	);
-}
-
-function isCardDropTargetData(value: unknown): value is CardDropTargetData {
-	if (!isRecord(value)) {
-		return false;
-	}
-	return (
-		value.type === CARD_DROP_TARGET_TYPE &&
-		typeof value.columnId === 'string' &&
-		typeof value.index === 'number'
-	);
-}
-
-function isCardListDropTargetData(
-	value: unknown,
-): value is CardListDropTargetData {
-	if (!isRecord(value)) {
-		return false;
-	}
-	return (
-		value.type === CARD_LIST_DROP_TARGET_TYPE &&
-		typeof value.columnId === 'string' &&
-		typeof value.index === 'number'
-	);
-}
-
-function isColumnDropTargetData(value: unknown): value is ColumnDropTargetData {
-	if (!isRecord(value)) {
-		return false;
-	}
-	return (
-		value.type === COLUMN_DROP_TARGET_TYPE && typeof value.index === 'number'
-	);
-}
+import {
+	useBoardDragAndDrop,
+	type CardDropIndicator,
+} from './hooks/useBoardDragAndDrop';
+import { useColumnDragAndDrop } from './hooks/useColumnDragAndDrop';
 
 /** Styles that can be modified by a caller */
 export type BoardClassKey = never;
@@ -196,59 +111,14 @@ function ColumnItem<
 	children,
 	...props
 }: ColumnItemProps<TColumn, TCard>) {
-	const [element, setElement] = useState<HTMLElement | null>(null);
-	const [isDragging, setIsDragging] = useState(false);
-
-	useEffect(() => {
-		if (!element) {
-			return;
-		}
-		return dropTargetForElements({
-			element,
-			canDrop: ({ source }) => {
-				return source.data?.type === COLUMN_DRAG_TYPE;
-			},
-			getData: ({ input }) => {
-				const rect = element.getBoundingClientRect();
-				const isAfter = input.clientX >= rect.left + rect.width / 2;
-				const data = {
-					type: COLUMN_DROP_TARGET_TYPE,
-					columnId: column.id,
-					index: isAfter ? index + 1 : index,
-				};
-				return data;
-			},
-			getDropEffect: () => 'move',
-		});
-	}, [column.id, element, index]);
-
-	useEffect(() => {
-		if (!element || isColumnDragDisabled) {
-			if (element) {
-				element.removeAttribute('draggable');
-			}
-			setIsDragging(false);
-			return;
-		}
-		return draggable({
-			element,
-			canDrag: () => !isColumnDragDisabled,
-			getInitialData: () => ({
-				type: COLUMN_DRAG_TYPE,
-				columnId: column.id,
-				index,
-			}),
-			onDragStart: () => {
-				setIsDragging(true);
-			},
-			onDrop: () => {
-				setIsDragging(false);
-			},
-		});
-	}, [column.id, element, index, isColumnDragDisabled]);
+	const { registerElement, isDragging } = useColumnDragAndDrop({
+		columnId: column.id,
+		index,
+		isDragDisabled: isColumnDragDisabled,
+	});
 
 	return (
-		<Container ref={setElement} className={className}>
+		<Container ref={registerElement} className={className}>
 			<KanbanColumn
 				{...props}
 				cardDropIndicatorIndex={cardDropIndicatorIndex ?? undefined}
@@ -414,13 +284,6 @@ export function Board<
 	intl = DEFAULT_INTL,
 }: BoardProps<TColumn, TCard>) {
 	const { classes, cx } = useStyles();
-	const [listElement, setListElement] = useState<HTMLDivElement | null>(null);
-	const [columnDropIndicatorIndex, setColumnDropIndicatorIndex] = useState<
-		number | null
-	>(null);
-	const [cardDropIndicator, setCardDropIndicator] =
-		useState<CardDropIndicator | null>(null);
-
 	const handlesColumnAdded = Boolean(handleChange || handleColumnAdded);
 	const handlesColumnMoved = Boolean(handleChange || handleColumnMoved);
 	const handlesCardAdded = Boolean(handleChange || handleCardAdded);
@@ -544,211 +407,12 @@ export function Board<
 		[columns, handleChange, handleColumnMoved, handlesColumnMoved],
 	);
 
-	const handleCardDrop = useCallback(
-		(source: CardDragData, dropTargets: Array<{ data: unknown }>) => {
-			const cardPositionTarget = dropTargets.find(target =>
-				isCardDropTargetData(target.data),
-			);
-			const cardListTarget = dropTargets.find(target =>
-				isCardListDropTargetData(target.data),
-			);
-			let targetData: CardDropTargetData | CardListDropTargetData | undefined;
-			if (cardPositionTarget) {
-				targetData = cardPositionTarget.data as CardDropTargetData;
-			} else if (cardListTarget) {
-				targetData = cardListTarget.data as CardListDropTargetData;
-			} else {
-				targetData = undefined;
-			}
-			if (!targetData) {
-				return;
-			}
-			let destinationIndex = targetData.index;
-			const destinationColumnId = targetData.columnId;
-			if (!destinationColumnId) {
-				return;
-			}
-			if (
-				destinationColumnId === source.columnId &&
-				destinationIndex > source.index
-			) {
-				destinationIndex -= 1;
-			}
-			if (
-				destinationColumnId === source.columnId &&
-				destinationIndex === source.index
-			) {
-				return;
-			}
-			moveCard(source.cardId, destinationColumnId, destinationIndex);
-		},
-		[moveCard],
-	);
-	const handleColumnDrop = useCallback(
-		(source: ColumnDragData, dropTargets: Array<{ data: unknown }>) => {
-			const columnTarget = dropTargets.find(target =>
-				isColumnDropTargetData(target.data),
-			);
-			if (!columnTarget) {
-				return;
-			}
-			const targetData = columnTarget.data as ColumnDropTargetData;
-			let destinationIndex = targetData.index;
-			if (destinationIndex > source.index) {
-				destinationIndex -= 1;
-			}
-			if (destinationIndex === source.index) {
-				return;
-			}
-			if (destinationIndex < 0) {
-				return;
-			}
-			moveColumn(source.columnId, destinationIndex);
-		},
-		[moveColumn],
-	);
-
-	const updateCardDropIndicator = useCallback(
-		(source: CardDragData, dropTargets: Array<{ data: unknown }>) => {
-			setColumnDropIndicatorIndex(null);
-			const cardPositionTarget = dropTargets.find(target =>
-				isCardDropTargetData(target.data),
-			);
-			const cardListTarget = dropTargets.find(target =>
-				isCardListDropTargetData(target.data),
-			);
-			let targetData: CardDropTargetData | CardListDropTargetData | undefined;
-			if (cardPositionTarget) {
-				targetData = cardPositionTarget.data as CardDropTargetData;
-			} else if (cardListTarget) {
-				targetData = cardListTarget.data as CardListDropTargetData;
-			} else {
-				targetData = undefined;
-			}
-			if (!targetData || !targetData.columnId) {
-				setCardDropIndicator(null);
-				return;
-			}
-			const isSameColumn = targetData.columnId === source.columnId;
-			let destinationIndex = targetData.index;
-			if (isSameColumn && destinationIndex > source.index) {
-				destinationIndex -= 1;
-			}
-			if (isSameColumn && destinationIndex === source.index) {
-				setCardDropIndicator(null);
-				return;
-			}
-			setCardDropIndicator(previous => {
-				if (
-					previous &&
-					previous.columnId === targetData.columnId &&
-					previous.index === targetData.index
-				) {
-					return previous;
-				}
-				return {
-					columnId: targetData.columnId,
-					index: targetData.index,
-				};
-			});
-		},
-		[],
-	);
-	const updateColumnDropIndicator = useCallback(
-		(source: ColumnDragData, dropTargets: Array<{ data: unknown }>) => {
-			void source;
-			setCardDropIndicator(null);
-			const columnTarget = dropTargets.find(target =>
-				isColumnDropTargetData(target.data),
-			);
-			if (!columnTarget) {
-				setColumnDropIndicatorIndex(null);
-				return;
-			}
-			const targetData = columnTarget.data as ColumnDropTargetData;
-			let destinationIndex = targetData.index;
-			if (destinationIndex > source.index) {
-				destinationIndex -= 1;
-			}
-			if (destinationIndex < 0) {
-				setColumnDropIndicatorIndex(null);
-				return;
-			}
-			if (destinationIndex === source.index) {
-				setColumnDropIndicatorIndex(null);
-				return;
-			}
-			setColumnDropIndicatorIndex(previous =>
-				previous === targetData.index ? previous : targetData.index,
-			);
-		},
-		[],
-	);
-
-	useEffect(() => {
-		if (!listElement) {
-			return;
-		}
-		return dropTargetForElements({
-			element: listElement,
-			canDrop: ({ source }) => isColumnDragData(source.data),
-			getData: () => ({
-				type: COLUMN_DROP_TARGET_TYPE,
-				columnId: undefined,
-				index: columns.length,
-			}),
-			getDropEffect: () => 'move',
+	const { columnDropIndicatorIndex, cardDropIndicator, setListRef } =
+		useBoardDragAndDrop<TColumn, TCard>({
+			columns,
+			moveCard,
+			moveColumn,
 		});
-	}, [columns.length, listElement]);
-
-	useEffect(() => {
-		const cleanup = monitorForElements({
-			canMonitor: ({ source }) =>
-				isCardDragData(source.data) || isColumnDragData(source.data),
-			onDragStart: ({ source, location }) => {
-				if (isCardDragData(source.data)) {
-					updateCardDropIndicator(source.data, location.current.dropTargets);
-					return;
-				}
-				if (isColumnDragData(source.data)) {
-					updateColumnDropIndicator(source.data, location.current.dropTargets);
-				}
-			},
-			onDrag: ({ source, location }) => {
-				if (isCardDragData(source.data)) {
-					updateCardDropIndicator(source.data, location.current.dropTargets);
-					return;
-				}
-				if (isColumnDragData(source.data)) {
-					updateColumnDropIndicator(source.data, location.current.dropTargets);
-				}
-			},
-			onDropTargetChange: ({ source, location }) => {
-				if (isCardDragData(source.data)) {
-					updateCardDropIndicator(source.data, location.current.dropTargets);
-					return;
-				}
-				if (isColumnDragData(source.data)) {
-					updateColumnDropIndicator(source.data, location.current.dropTargets);
-				}
-			},
-			onDrop: ({ source, location }) => {
-				if (isCardDragData(source.data)) {
-					handleCardDrop(source.data, location.current.dropTargets);
-				} else if (isColumnDragData(source.data)) {
-					handleColumnDrop(source.data, location.current.dropTargets);
-				}
-				setCardDropIndicator(null);
-				setColumnDropIndicatorIndex(null);
-			},
-		});
-		return cleanup;
-	}, [
-		handleCardDrop,
-		handleColumnDrop,
-		updateCardDropIndicator,
-		updateColumnDropIndicator,
-	]);
 
 	const handleAddColumn = useCallback(async () => {
 		// Adding a column involves two steps:
@@ -850,7 +514,7 @@ export function Board<
 	return (
 		<div className={cx(classes.content, styles?.root)}>
 			<IntlContext.Provider value={intl}>
-				<div className={classes.list} ref={setListElement}>
+				<div className={classes.list} ref={setListRef}>
 					<InnerColumnList
 						getColumnClassName={getColumnClassName}
 						styles={styles}
