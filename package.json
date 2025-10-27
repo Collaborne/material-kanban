@@ -13,7 +13,7 @@
 	},
 	"scripts": {
 		"build": "tsc --noEmit false -p tsconfig.build.json",
-		"build:watch": "npm run build:locales && tsc-watch --noEmit false -p tsconfig.build.json --onSuccess \"yalc push --watch\"",
+		"build:watch": "tsc-watch --noEmit false -p tsconfig.build.json --onSuccess \"npx yalc push --watch\"",
 		"lint": "npx eslint --report-unused-disable-directives $(node -p 'require(\"./tsconfig.test.json\").include.map(include => `'\\${include}.\\{js,ts,tsx\\}'`).join(\" \")')",
 		"test": "npm run typecheck && npm run lint",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
@@ -71,6 +71,7 @@
 		"react-is": "^19.2.0",
 		"standard": "^17.1.0",
 		"storybook": "^8.6.14",
+		"tsc-watch": "^7.2.0",
 		"tss-react": "^4.9.19",
 		"typescript": "^5.7.2"
 	},

@@ -71,11 +71,10 @@ interface Props<TCard extends Data.Card = Data.Card> {
 	children?: RenderCard<TCard>;
 }
 
-const useStyles = makeStyles()(theme => ({
+const useStyles = makeStyles()(() => ({
 	card: {
 		cursor: 'pointer!important',
 		position: 'relative',
-		marginBottom: theme.spacing(1),
 	},
 }));
 
