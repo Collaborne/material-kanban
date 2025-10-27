@@ -1,7 +1,7 @@
 import { dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import List from '@mui/material/List';
 import Paper from '@mui/material/Paper';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 
 import * as Data from '../data';
@@ -42,6 +42,8 @@ export interface KanbanColumnProps<
 
 	isCardDragDisabled?: boolean;
 
+	cardDropIndicatorIndex?: number | null;
+
 	renderColumnName?: (colum: TColumn) => ReactNode;
 	renderColumnActions?: (colum: TColumn) => ReactNode;
 	getColumnClassName?: (colum: TColumn) => string | undefined;
@@ -51,6 +53,7 @@ interface InnerObjectsListProps<TCard extends Data.Card = Data.Card> {
 	columnId: string;
 	cards: readonly TCard[];
 	isDragDisabled?: boolean;
+	dropIndicatorIndex?: number | null;
 	children?: RenderCard<TCard>;
 }
 
@@ -67,27 +70,43 @@ const useStyles = makeStyles()(theme => ({
 		flexGrow: 1,
 		padding: theme.spacing(0.5, 1 / 8, 1, 1 / 8),
 	},
+	cardDropIndicator: {
+		backgroundColor: theme.palette.primary.main,
+		borderRadius: theme.shape.borderRadius,
+		height: theme.spacing(0.5),
+		margin: theme.spacing(0.5, 1 / 8),
+		pointerEvents: 'none',
+	},
 }));
 
 function InnerObjectsList<TCard extends Data.Card = Data.Card>({
 	columnId,
 	cards,
 	isDragDisabled,
+	dropIndicatorIndex,
 	children,
 }: InnerObjectsListProps<TCard>) {
+	const { classes } = useStyles();
 	return (
 		<>
 			{cards.map((card, index) => (
-				<KanbanCard
-					key={card.id}
-					card={card}
-					index={index}
-					columnId={columnId}
-					isDragDisabled={isDragDisabled}
-				>
-					{children}
-				</KanbanCard>
+				<Fragment key={card.id}>
+					{dropIndicatorIndex === index ? (
+						<div aria-hidden="true" className={classes.cardDropIndicator} />
+					) : null}
+					<KanbanCard
+						card={card}
+						index={index}
+						columnId={columnId}
+						isDragDisabled={isDragDisabled}
+					>
+						{children}
+					</KanbanCard>
+				</Fragment>
 			))}
+			{dropIndicatorIndex === cards.length ? (
+				<div aria-hidden="true" className={classes.cardDropIndicator} />
+			) : null}
 		</>
 	);
 }
@@ -103,6 +122,7 @@ export function KanbanColumn<
 	renderColumnName,
 	getColumnClassName,
 	isCardDragDisabled,
+	cardDropIndicatorIndex,
 	children,
 	...props
 }: KanbanColumnProps<TColumn, TCard>) {
@@ -164,6 +184,7 @@ export function KanbanColumn<
 					columnId={column.id}
 					cards={column.cards}
 					isDragDisabled={isCardDragDisabled}
+					dropIndicatorIndex={cardDropIndicatorIndex ?? undefined}
 				>
 					{children}
 				</InnerObjectsList>
