@@ -45,6 +45,7 @@ function BasicStory() {
 			createCard={createCard}
 			onCardMoved={handleCardMove}
 			onColumnMoved={handleColumnMove}
+			canReorderColumn={column => column.id !== 'column3'}
 		/>
 	);
 }

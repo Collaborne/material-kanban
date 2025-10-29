@@ -76,7 +76,7 @@ interface InnerColumnListProps<
 
 	columnActions?: (column: TColumn) => React.ReactNode;
 
-	isColumnDragDisabled?: boolean;
+	getIsColumnDragDisabled?: (column: TColumn) => boolean;
 	isCardDragDisabled?: boolean;
 
 	columnDropIndicatorIndex?: number | null;
@@ -90,11 +90,15 @@ interface ColumnItemProps<
 	TCard extends Data.Card = Data.Card,
 > extends Omit<
 		InnerColumnListProps<TColumn, TCard>,
-		'columns' | 'columnDropIndicatorIndex' | 'cardDropIndicator'
+		| 'columns'
+		| 'columnDropIndicatorIndex'
+		| 'cardDropIndicator'
+		| 'getIsColumnDragDisabled'
 	> {
 	column: TColumn;
 	index: number;
 	className: string;
+	isColumnDragDisabled?: boolean;
 	cardDropIndicatorIndex?: number | null;
 }
 
@@ -142,6 +146,8 @@ function InnerColumnList<
 	cardDropIndicator,
 	onAddCard: handleAddCard,
 
+	getIsColumnDragDisabled,
+
 	children,
 	...props
 }: InnerColumnListProps<TColumn, TCard>) {
@@ -153,6 +159,7 @@ function InnerColumnList<
 					cardDropIndicator?.columnId === column.id
 						? cardDropIndicator.index
 						: null;
+				const isColumnDragDisabled = getIsColumnDragDisabled?.(column);
 				return (
 					<React.Fragment key={column.id}>
 						<div
@@ -166,6 +173,7 @@ function InnerColumnList<
 							column={column}
 							index={index}
 							onAddCard={handleAddCard}
+							isColumnDragDisabled={isColumnDragDisabled}
 							cardDropIndicatorIndex={cardDropIndicatorIndex ?? undefined}
 							{...props}
 						>
@@ -238,6 +246,14 @@ export interface BoardProps<
 	 */
 	AddColumnButton?: React.ReactElement | null;
 
+	/**
+	 * Determine whether a column can be reordered via drag & drop.
+	 *
+	 * Return `false` to prevent users from dragging the column. Other columns
+	 * cannot be moved across a column that returns `false`.
+	 */
+	canReorderColumn?: (column: TColumn) => boolean;
+
 	children?: RenderCard<TCard>;
 }
 
@@ -276,6 +292,7 @@ export function Board<
 	styles,
 	renderColumnActions,
 	renderColumnName,
+	canReorderColumn,
 
 	AddColumnButton: AddColumnButtonParam,
 
@@ -288,6 +305,110 @@ export function Board<
 	const handlesColumnMoved = Boolean(handleChange || handleColumnMoved);
 	const handlesCardAdded = Boolean(handleChange || handleCardAdded);
 	const handlesCardMoved = Boolean(handleChange || handleCardMoved);
+
+	const isColumnMoveBlocked = useCallback(
+		({
+			targetColumn,
+			originalIndex,
+			destinationIndex,
+			remainingColumns,
+		}: {
+			targetColumn: TColumn;
+			originalIndex: number;
+			destinationIndex: number;
+			remainingColumns: readonly TColumn[];
+		}) => {
+			if (!canReorderColumn) {
+				return false;
+			}
+
+			const lockedColumns = columns.filter(
+				currentColumn => !canReorderColumn(currentColumn),
+			);
+			if (lockedColumns.length === 0) {
+				return false;
+			}
+
+			const proposedColumns = [...remainingColumns];
+			proposedColumns.splice(destinationIndex, 0, targetColumn);
+			const proposedColumnIndex = proposedColumns.findIndex(
+				currentColumn => currentColumn.id === targetColumn.id,
+			);
+
+			return lockedColumns.some(lockedColumn => {
+				if (lockedColumn.id === targetColumn.id) {
+					return false;
+				}
+
+				const originalLockedIndex = columns.findIndex(
+					currentColumn => currentColumn.id === lockedColumn.id,
+				);
+				const wasLeft = originalIndex < originalLockedIndex;
+
+				const finalLockedIndex = proposedColumns.findIndex(
+					currentColumn => currentColumn.id === lockedColumn.id,
+				);
+				if (finalLockedIndex === -1 || proposedColumnIndex === -1) {
+					return false;
+				}
+				const isLeft = proposedColumnIndex < finalLockedIndex;
+
+				return wasLeft !== isLeft;
+			});
+		},
+		[canReorderColumn, columns],
+	);
+
+	const getIsColumnDragDisabled = useCallback(
+		(column: TColumn) => {
+			if (!handlesColumnMoved) {
+				return true;
+			}
+			if (!canReorderColumn) {
+				return false;
+			}
+			return !canReorderColumn(column);
+		},
+		[canReorderColumn, handlesColumnMoved],
+	);
+
+	const isColumnMoveAllowed = useCallback(
+		({
+			columnId,
+			sourceIndex,
+			destinationIndex,
+		}: {
+			columnId: string;
+			sourceIndex: number;
+			destinationIndex: number;
+		}) => {
+			if (!handlesColumnMoved) {
+				return false;
+			}
+
+			const targetColumn = columns.find(
+				currentColumn => currentColumn.id === columnId,
+			);
+			if (!targetColumn) {
+				return false;
+			}
+			if (!canReorderColumn?.(targetColumn)) {
+				return false;
+			}
+
+			const remainingColumns = columns.filter(
+				currentColumn => currentColumn.id !== columnId,
+			);
+
+			return !isColumnMoveBlocked({
+				targetColumn,
+				originalIndex: sourceIndex,
+				destinationIndex,
+				remainingColumns,
+			});
+		},
+		[canReorderColumn, columns, handlesColumnMoved, isColumnMoveBlocked],
+	);
 
 	const moveCard = useCallback(
 		(cardId: string, columnId: string, index: number) => {
@@ -395,16 +516,38 @@ export function Board<
 				console.error(`Cannot find column ${columnId}`);
 				return;
 			}
-			newColumns.splice(index, 0, column);
+			if (!canReorderColumn?.(column)) {
+				return;
+			}
+			if (
+				isColumnMoveBlocked({
+					targetColumn: column,
+					originalIndex: oldIndex,
+					destinationIndex: index,
+					remainingColumns: newColumns,
+				})
+			) {
+				return;
+			}
+
+			const proposedColumns = [...newColumns];
+			proposedColumns.splice(index, 0, column);
 
 			if (handleChange) {
-				handleChange(newColumns);
+				handleChange(proposedColumns);
 			}
 			if (handleColumnMoved) {
-				handleColumnMoved(column, newColumns.indexOf(column), oldIndex);
+				handleColumnMoved(column, proposedColumns.indexOf(column), oldIndex);
 			}
 		},
-		[columns, handleChange, handleColumnMoved, handlesColumnMoved],
+		[
+			canReorderColumn,
+			columns,
+			handleChange,
+			handleColumnMoved,
+			handlesColumnMoved,
+			isColumnMoveBlocked,
+		],
 	);
 
 	const { columnDropIndicatorIndex, cardDropIndicator, setListRef } =
@@ -412,6 +555,7 @@ export function Board<
 			columns,
 			moveCard,
 			moveColumn,
+			isColumnMoveAllowed,
 		});
 
 	const handleAddColumn = useCallback(async () => {
@@ -524,7 +668,7 @@ export function Board<
 						columnDropIndicatorIndex={columnDropIndicatorIndex ?? undefined}
 						cardDropIndicator={cardDropIndicator ?? undefined}
 						onAddCard={createCard && handleAddCard}
-						isColumnDragDisabled={!handlesColumnMoved}
+						getIsColumnDragDisabled={getIsColumnDragDisabled}
 						isCardDragDisabled={!handlesCardMoved}
 					>
 						{children}
