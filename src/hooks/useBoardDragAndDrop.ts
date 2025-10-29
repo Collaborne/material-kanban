@@ -81,12 +81,22 @@ interface UseBoardDragAndDropArgs<
 	columns: readonly TColumn[];
 	moveCard: (cardId: string, columnId: string, index: number) => void;
 	moveColumn: (columnId: string, index: number) => void;
+	isColumnMoveAllowed?: (args: {
+		columnId: string;
+		sourceIndex: number;
+		destinationIndex: number;
+	}) => boolean;
 }
 
 export function useBoardDragAndDrop<
 	TColumn extends Data.Column<TCard>,
 	TCard extends Data.Card,
->({ columns, moveCard, moveColumn }: UseBoardDragAndDropArgs<TColumn, TCard>) {
+>({
+	columns,
+	moveCard,
+	moveColumn,
+	isColumnMoveAllowed,
+}: UseBoardDragAndDropArgs<TColumn, TCard>) {
 	const [listElement, setListElement] = useState<HTMLDivElement | null>(null);
 	const [columnDropIndicatorIndex, setColumnDropIndicatorIndex] = useState<
 		number | null
@@ -158,9 +168,18 @@ export function useBoardDragAndDrop<
 			if (destinationIndex < 0) {
 				return;
 			}
+			if (
+				!isColumnMoveAllowed?.({
+					columnId: source.columnId,
+					sourceIndex: source.index,
+					destinationIndex,
+				})
+			) {
+				return;
+			}
 			moveColumn(source.columnId, destinationIndex);
 		},
-		[moveColumn],
+		[isColumnMoveAllowed, moveColumn],
 	);
 
 	const updateCardDropIndicator = useCallback(
@@ -233,11 +252,21 @@ export function useBoardDragAndDrop<
 				setColumnDropIndicatorIndex(null);
 				return;
 			}
+			if (
+				!isColumnMoveAllowed?.({
+					columnId: source.columnId,
+					sourceIndex: source.index,
+					destinationIndex,
+				})
+			) {
+				setColumnDropIndicatorIndex(null);
+				return;
+			}
 			setColumnDropIndicatorIndex(previous =>
 				previous === targetData.index ? previous : targetData.index,
 			);
 		},
-		[],
+		[isColumnMoveAllowed],
 	);
 
 	useEffect(() => {
