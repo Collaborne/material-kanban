@@ -49,7 +49,6 @@
 		"@typescript-eslint/eslint-plugin": "^5.29.0",
 		"@typescript-eslint/parser": "^5.29.0",
 		"@vitejs/plugin-react": "^4.2.1",
-		"chromatic": "^11.2.0",
 		"cross-env": "^7.0.3",
 		"eslint": "^8.18.0",
 		"eslint-config-collaborne": "^5.4.10",
